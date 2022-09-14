@@ -73,7 +73,7 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
 fun ageDescription(age: Int): String {
     val a = (age / 100)
     val b = (age / 10)
-    return if ((age - 10 * a) in 10..20) "$age лет" else if ((age - 10 * b) == 1) "$age год" else if ((age - 10 * b) in 2..4) "$age года" else "$age лет"
+    return if ((age - 10 * a) in 10..20) "$age лет" else if ((age - a * 100) in 11..14) "$age лет" else if ((age - 10 * b) == 1) "$age год" else if ((age - 10 * b) in 2..4) "$age года" else "$age лет"
 }
 
 
