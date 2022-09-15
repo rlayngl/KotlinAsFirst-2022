@@ -70,12 +70,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String {
-    val a = (age / 100)
-    val b = (age / 10)
-    return if ((age - 10 * a) in 10..20) "$age лет" else if ((age - a * 100) in 11..14) "$age лет" else if ((age - 10 * b) == 1) "$age год" else if ((age - 10 * b) in 2..4) "$age года" else "$age лет"
-}
-
+fun ageDescription(age: Int): String =
+    if ((age % 100) in 10..20) "$age лет" else
+        if ((age % 10) == 1) "$age год" else
+            if ((age % 10) in 2..4) "$age года" else "$age лет"
 
 /**
  * Простая (2 балла)
@@ -110,9 +108,11 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int {
-    return if ((rookX1 == kingX && rookX2 != kingX) || (rookY1 == kingY && rookY2 != kingY)) 1 else if ((rookX2 == kingX && rookX1 != kingX) || (rookY2 == kingY && rookY1 != kingY)) 2 else if ((rookX1 == kingX && rookX2 == kingX) || (rookX1 == kingX && rookY2 == kingY) || (rookY1 == kingY && rookX2 == kingX) ||(rookY2 == kingY && rookX2 == kingX) || (rookX1 == kingX && rookY1 == kingY) || (rookY1 == kingY && rookY2 == kingY))  3 else 0
-}
+): Int =
+    if ((rookX1 == kingX) && ((rookX2 != kingX) || (rookY2 != kingY)) || ((rookY1 == kingY) && ((rookY2 != kingY) || (rookX2 != kingX)))) 1 else
+        if ((rookX2 == kingX) && ((rookX1 != kingX) || (rookY1 != kingY)) || ((rookY2 == kingY) && ((rookY1 != kingY) || (rookX1 != kingX)))) 2 else
+            if (((rookX1 == kingX) && (rookX2 == kingX)) || (rookX1 == kingX && rookY2 == kingY) || (rookY1 == kingY && rookX2 == kingX) || (rookY2 == kingY && rookX2 == kingX) || (rookX1 == kingX && rookY1 == kingY) || (rookY1 == kingY && rookY2 == kingY)) 3 else 0
+
 
 /**
  * Простая (2 балла)
@@ -128,9 +128,10 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int {
-    return if ((abs(kingX - bishopX) == abs(kingY - bishopY)) && ((kingX != rookX) || (kingY != rookY))) 2 else if ((abs(kingX - bishopX) != abs(kingY - bishopY)) && ((kingX == rookX) || (kingY == rookY))) 1 else if ((abs(kingX - bishopX) == abs(kingY - bishopY)) && (((kingX == rookX) || (kingY == rookY)))) 3 else 0
-}
+): Int =
+    if ((abs(kingX - bishopX) == abs(kingY - bishopY)) && ((kingX != rookX) && (kingY != rookY))) 2 else
+        if ((abs(kingX - bishopX) != abs(kingY - bishopY)) && ((kingX == rookX) || (kingY == rookY))) 1 else
+            if ((abs(kingX - bishopX) == abs(kingY - bishopY)) && (((kingX == rookX) || (kingY == rookY)))) 3 else 0
 
 /**
  * Простая (2 балла)
@@ -140,9 +141,10 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int {
-    return if ((sqr(a) + sqr(b) > sqr(c)) || (sqr(a) + sqr(c) > sqr(b)) || (sqr(c) + sqr(b) > sqr(a))) 0 else if ((sqr(a) + sqr(b) == sqr(c)) || (sqr(a) + sqr(c) == sqr(b)) || (sqr(c) + sqr(b) == sqr(a))) 1 else if ((sqr(a) + sqr(b) < sqr(c)) || (sqr(a) + sqr(c) < sqr(b)) || (sqr(c) + sqr(b) < sqr(a))) 2 else 0
-}
+fun triangleKind(a: Double, b: Double, c: Double): Int =
+    if ((sqr(a) + sqr(b) > sqr(c)) || (sqr(a) + sqr(c) > sqr(b)) || (sqr(c) + sqr(b) > sqr(a))) 0 else
+        if ((sqr(a) + sqr(b) == sqr(c)) || (sqr(a) + sqr(c) == sqr(b)) || (sqr(c) + sqr(b) == sqr(a))) 1 else
+            if ((sqr(a) + sqr(b) < sqr(c)) || (sqr(a) + sqr(c) < sqr(b)) || (sqr(c) + sqr(b) < sqr(a))) 2 else 0
 
 /**
  * Средняя (3 балла)
@@ -152,6 +154,8 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return if ((b in c..d) && (c > a)) (b - c) else if ((b in c..d) && (a in c..d)) (b - a) else if ((c in a..b) && (d in a..b)) (d - c) else if ((d in a..b) && (a > c)) (d - a) else if ((a == c) && (b == d)) (b - a) else -1
-}
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
+    if ((b in c..d) && (c > a)) (b - c) else
+        if ((b in c..d) && (a in c..d)) (b - a) else
+            if ((c in a..b) && (d in a..b)) (d - c) else
+                if ((d in a..b) && (a > c)) (d - a) else if ((a == c) && (b == d)) (b - a) else -1
