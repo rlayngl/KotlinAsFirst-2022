@@ -109,8 +109,8 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int =
-    if ((rookX1 == kingX) && ((rookX2 != kingX) || (rookY2 != kingY)) || ((rookY1 == kingY) && ((rookY2 != kingY) || (rookX2 != kingX)))) 1 else
-        if ((rookX2 == kingX) && ((rookX1 != kingX) || (rookY1 != kingY)) || ((rookY2 == kingY) && ((rookY1 != kingY) || (rookX1 != kingX)))) 2 else
+    if ((rookX1 == kingX) && ((rookX2 != kingX) && (rookY2 != kingY)) || ((rookY1 == kingY) && ((rookY2 != kingY) && (rookX2 != kingX)))) 1 else
+        if ((rookX2 == kingX) && ((rookX1 != kingX) && (rookY1 != kingY)) || ((rookY2 == kingY) && ((rookY1 != kingY) && (rookX1 != kingX)))) 2 else
             if (((rookX1 == kingX) && (rookX2 == kingX)) || (rookX1 == kingX && rookY2 == kingY) || (rookY1 == kingY && rookX2 == kingX) || (rookY2 == kingY && rookX2 == kingX) || (rookX1 == kingX && rookY1 == kingY) || (rookY1 == kingY && rookY2 == kingY)) 3 else 0
 
 
