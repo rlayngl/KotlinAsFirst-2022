@@ -144,7 +144,7 @@ fun rookOrBishopThreatens(
 fun triangleKind(a: Double, b: Double, c: Double): Int =
     if ((sqr(a) + sqr(b) > sqr(c)) || (sqr(a) + sqr(c) > sqr(b)) || (sqr(c) + sqr(b) > sqr(a))) 0 else
         if ((sqr(a) + sqr(b) == sqr(c)) || (sqr(a) + sqr(c) == sqr(b)) || (sqr(c) + sqr(b) == sqr(a))) 1 else
-            if ((sqr(a) + sqr(b) < sqr(c)) || (sqr(a) + sqr(c) < sqr(b)) || (sqr(c) + sqr(b) < sqr(a))) 2 else 0
+            if ((sqr(a) + sqr(b) < sqr(c)) || (sqr(a) + sqr(c) < sqr(b)) || (sqr(c) + sqr(b) < sqr(a))) 2 else -1
 
 /**
  * Средняя (3 балла)
