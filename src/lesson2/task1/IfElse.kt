@@ -94,13 +94,12 @@ fun timeForHalfWay(
     val s2 = t2 * v2
     val s3 = t3 * v3
     val s = s1 + s2 + s3
-    return if ((s1 + s2 > s / 2) && (s3 + s2 > s / 2)) {
-        (t1 + (s2 + s3 - s1) / (2 * v2))
-    } else if (s1 > s / 2) {
-        (s / (2 * v1))
-    } else if (s3 > s / 2) {
-        (t1 + t2 + t3 - (s / (2 * v3)))
-    } else 0.0
+    return when {
+        ((s1 + s2 > s / 2) && (s3 + s2 > s / 2)) -> (t1 + (s2 + s3 - s1) / (2 * v2))
+        (s1 > s / 2) -> (s / (2 * v1))
+        (s3 > s / 2) -> (t1 + t2 + t3 - (s / (2 * v3)))
+        else -> 0.0
+    }
 }
 
 /**
@@ -112,26 +111,26 @@ fun timeForHalfWay(
  * и 3, если угроза от обеих ладей.
  * Считать, что ладьи не могут загораживать друг друга
  */
+
 fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    val a = rookX1 == kingX
-    val b = rookX2 == kingX
-    val c = rookY1 == kingY
-    val d = rookY2 == kingY
-    val e = rookX1 != kingX
-    val f = rookX2 != kingX
-    val g = rookY1 != kingY
-    val h = rookY2 != kingY
-    return if (a && (f && h) || (c && (f && h))) {
-        1
-    } else if (b && (e && g) || (d && (e && g))) {
-        2
-    } else if ((a && b) || (a && c) || (a && d) || (b && c) || (b && d) || (c && d)) {
-        3
-    } else 0
+    val rookX1Threatens = rookX1 == kingX
+    val rookX2Threatens = rookX2 == kingX
+    val rookY1OrY2Threatens = (rookY1 == kingY) || (rookY2 == kingY)
+    val rookY1AndY2Threatens = (rookY1 == kingY) && (rookY2 == kingY)
+    val rookX1OrY1Threatens = rookX1Threatens || (rookY1 == kingY)
+    val rookX2OrY2Threatens = rookX2Threatens || (rookY2 == kingY)
+    return when {
+        (rookX1Threatens && (rookX2Threatens || rookY1OrY2Threatens)) ||
+        (rookX2Threatens && rookY1OrY2Threatens) ||
+        (rookY1AndY2Threatens) -> 3
+        rookX1OrY1Threatens -> 1
+        rookX2OrY2Threatens -> 2
+        else -> 0
+    }
 }
 
 
@@ -150,19 +149,16 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    val a = kingX - bishopX
-    val b = kingY - bishopY
-    val c = kingX == rookX
-    val d = kingY == rookY
-    val e = kingX != rookX
-    val f = kingY != rookY
-    return if ((abs(a) == abs(b)) && (e && f)) {
-        2
-    } else if ((abs(a) != abs(b)) && (c || d)) {
-        1
-    } else if ((abs(a) == abs(b)) && ((c || d))) {
-        3
-    } else 0
+    val distanceByX = kingX - bishopX
+    val distanceByY = kingY - bishopY
+    val rookThreatensX = kingX == rookX
+    val rookThreatensY = kingY == rookY
+    return when {
+        (abs(distanceByX) == abs(distanceByY)) && ((rookThreatensX || rookThreatensY)) -> 3
+        abs(distanceByX) == abs(distanceByY) -> 2
+        rookThreatensX || rookThreatensY -> 1
+        else -> 0
+    }
 }
 
 /**
@@ -177,13 +173,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val x = sqr(a) + sqr(b)
     val y = sqr(a) + sqr(c)
     val z = sqr(b) + sqr(c)
-    return if ((a > b + c) || (b > a + c) || (c > a + b)) {
-        -1
-    } else if ((x < sqr(c)) || (y < sqr(b)) || (z < sqr(a))) {
-        2
-    } else if ((x == sqr(c)) || (y == sqr(b)) || (z == sqr(a))) {
-        1
-    } else 0
+    return when {
+        ((a > b + c) || (b > a + c) || (c > a + b)) -> -1
+        ((x < sqr(c)) || (y < sqr(b)) || (z < sqr(a))) -> 2
+        ((x == sqr(c)) || (y == sqr(b)) || (z == sqr(a))) -> 1
+        else -> 0
+    }
 }
 
 /**
@@ -195,14 +190,14 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    val o = max(a, b)
-    val p = max(c, d)
-    val q = min(a, b)
-    val r = min(c, d)
-    val x = max(o, p) - min(q, r)
-    val n = d - c + b - a
-    return if (x > n) {
+    val maxAOrB = max(a, b)
+    val maxCOrD = max(c, d)
+    val minAOrB = min(a, b)
+    val minCOrD = min(c, d)
+    val biggestDistance = max(maxAOrB, maxCOrD) - min(minAOrB, minCOrD)
+    val lengthBetweenAD = d - c + b - a
+    return if (biggestDistance > lengthBetweenAD) {
         -1
-    } else (n - x)
+    } else (lengthBetweenAD - biggestDistance)
 }
 

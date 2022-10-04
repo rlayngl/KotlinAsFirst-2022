@@ -4,6 +4,8 @@ package lesson2.task2
 
 import lesson1.task1.sqr
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -25,9 +27,7 @@ fun isNumberHappy(number: Int): Boolean {
     val b = number / 100
     val c = number / 10
     val d = number % 10
-    return if ((a + (b - a * 10)) == ((c - b * 10) + d)) {
-        true
-    } else false
+    return ((a + (b - a * 10)) == ((c - b * 10) + d))
 }
 
 /**
@@ -38,9 +38,7 @@ fun isNumberHappy(number: Int): Boolean {
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
-    if (((x1 == x2) || (y1 == y2)) || (abs(x1 - x2) == abs(y1 - y2))) {
-        true
-    } else false
+    (((x1 == x2) || (y1 == y2)) || (abs(x1 - x2) == abs(y1 - y2)))
 
 
 
@@ -51,17 +49,14 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int =
-    if (((month in 1..7) && (month % 2 == 1)) || ((month in 8..12) && (month % 2 == 0))) {
-        31
-    } else if ((month == 2) && (year % 100 == 0) && (year % 400 == 0)) {
-        29
-    } else if ((month == 2) && (year % 100 == 0) && (year % 400 != 0)) {
-        28
-    } else if ((month == 2) && (year % 4 == 0)) {
-        29
-    } else if ((month == 2) && (year % 4 in 1..3)) {
-        28
-    } else 30
+    when {
+        (((month in 1..7) && (month % 2 == 1)) || ((month in 8..12) && (month % 2 == 0))) -> 31
+        ((month == 2) && (year % 100 == 0) && (year % 400 == 0)) -> 29
+        ((month == 2) && (year % 100 == 0) && (year % 400 != 0)) -> 28
+        ((month == 2) && (year % 4 == 0)) -> 29
+        ((month == 2) && (year % 4 in 1..3)) -> 28
+        else -> 30
+}
 
 /**
  * Простая (2 балла)
@@ -73,9 +68,7 @@ fun daysInMonth(month: Int, year: Int): Int =
 fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double
-): Boolean = if (sqrt(sqr(x1 - x2) + sqr(y1 - y2)) + r1 <= r2) {
-    true
-} else false
+): Boolean = (sqrt(sqr(x1 - x2) + sqr(y1 - y2)) + r1 <= r2)
 
 /**
  * Средняя (3 балла)
@@ -87,13 +80,9 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val m = r >= a
-    val n = r >= b
-    val o = r >= c
-    val p = s >= a
-    val q = s >= b
-    val t = s >= c
-    return if (((m && q) || (p && n)) || ((o && q) || (t && n)) || ((m && t) || (p && o))) {
-        true
-    } else false
+    val m = min(a, b)
+    val n = min(m, c)
+    val o = max(r, s)
+    val p = min(r, s)
+    return (n <= o) && (m <= o) && ((n <= p) || (m <= p))
 }
