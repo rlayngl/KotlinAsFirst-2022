@@ -66,6 +66,7 @@ class Tests {
     @Tag("2")
     fun digitNumber() {
         assertEquals(1, digitNumber(0))
+        assertEquals(2, digitNumber(-11))
         assertEquals(1, digitNumber(7))
         assertEquals(2, digitNumber(10))
         assertEquals(2, digitNumber(12))
@@ -137,6 +138,7 @@ class Tests {
     @Tag("3")
     fun lcm() {
         assertEquals(13, lcm(13, 13))
+        assertEquals(9280386, lcm(4806, 11586))
         assertEquals(4, lcm(4, 4))
         assertEquals(8, lcm(2, 8))
         assertEquals(24, lcm(6, 8))
@@ -234,6 +236,7 @@ class Tests {
         assertEquals(0, squareSequenceDigit(17))
         assertEquals(9, squareSequenceDigit(27))
         assertEquals(8, squareSequenceDigit(71))
+        assertEquals(6, squareSequenceDigit(159))
     }
 
     @Test
@@ -251,5 +254,6 @@ class Tests {
         assertEquals(5, fibSequenceDigit(14))
         assertEquals(2, fibSequenceDigit(20))
         assertEquals(2, fibSequenceDigit(58))
+        assertEquals(3, fibSequenceDigit(234))
     }
 }

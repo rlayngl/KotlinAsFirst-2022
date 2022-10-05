@@ -5,6 +5,7 @@ package lesson3.task1
 import lesson1.task1.sqr
 import kotlin.math.sqrt
 import kotlin.math.min
+import kotlin.math.abs
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -76,7 +77,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var count = 1
-    var number = n
+    var number = abs(n)
     while (number / 10 > 0) {
         count++
         number /= 10
@@ -167,12 +168,12 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var b = min(m, n)
+    val b = min(m, n)
     var k = m * n
     if (m == n) {
         return m
     } else for (a in b downTo 1) {
-         if ((m % a == 0) && (n % a == 0)) {
+         if ((m % a == 0) && (n % a == 0) && ((m * n) % a == 0)) {
             k /= a
         } else 0
     }
@@ -295,14 +296,22 @@ fun cos(x: Double, eps: Double): Double = TODO() //пока не могу до �
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
     var a = 0
-    for (i in 1..31) {
+    for (i in 1..1000) {
         var b = sqr(i)
         while ((b >= 1) && (count != n)) {
-            a = if (b >= 100) {
-                 sqr(i) / 100
+            a = if (b >= 1000000) {
+                sqr(i) / 1000000
+            } else if (b >= 100000) {
+                (sqr(i) / 100000) % 10
+            } else if (b >= 10000) {
+                (sqr(i) / 10000) % 10
+            } else if (b >= 1000) {
+                (sqr(i) / 1000) % 10
+            } else if (b >= 100) {
+                (sqr(i) / 100) % 10
             } else if (b in 10..99) {
-                 (sqr(i) / 10) % 10
-            } else  sqr(i) % 10
+                (sqr(i) / 10) % 10
+            } else sqr(i) % 10
             count++
             b /= 10
         }
@@ -322,11 +331,17 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
     var a = 0
-    for (m in 1..36) {
+    for (m in 1..41) {
         var b = fib(m)
         while ((b >= 1) && (count != n)) {
-            a = if (b >= 1000000) {
-                fib(m) / 1000000
+            a = if (b >= 1000000000) {
+                fib(m) / 1000000000
+            } else if (b >= 100000000) {
+                (fib(m) / 100000000) % 10
+            } else if (b >= 10000000) {
+                (fib(m) / 10000000) % 10
+            } else if (b >= 1000000) {
+                (fib(m) / 1000000) % 10
             } else if (b >= 100000) {
                 (fib(m) / 100000) % 10
             } else if (b >= 10000) {
@@ -337,7 +352,7 @@ fun fibSequenceDigit(n: Int): Int {
                 (fib(m) / 100) % 10
             } else if (b in 10..99) {
                 (fib(m) / 10) % 10
-            } else fib(m) % 10
+            } else fib(m)
             count++
             b /= 10
         }
