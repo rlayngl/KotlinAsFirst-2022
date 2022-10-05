@@ -3,8 +3,8 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
-import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.math.min
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -77,14 +77,13 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var count = 1
     var number = n
-    for (i in 0..n) {
-        if (number / 10 > 0) {
-            count++
-        }
+    while (number / 10 > 0) {
+        count++
         number /= 10
     }
     return count
 }
+
 
 /**
  * Простая (2 балла)
@@ -168,17 +167,15 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var a = m
+    var b = min(m, n)
     var k = m * n
-    for (a in m downTo 2)
-        for (a in n downTo 2) {
-            if ((m % a == 0) && (n % a == 0)) {
-                k = m * n / a
-            } else continue
-            if ((m % a != 0) || (n % a != 0)) {
-                k = m * n
-            }
-        }
+    if (m == n) {
+        return m
+    } else for (a in b downTo 1) {
+         if ((m % a == 0) && (n % a == 0)) {
+            k /= a
+        } else 0
+    }
     return k
 }
 
@@ -298,7 +295,7 @@ fun cos(x: Double, eps: Double): Double = TODO() //пока не могу до �
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
     var a = 0
-    for (i in 1..20) {
+    for (i in 1..31) {
         var b = sqr(i)
         while ((b >= 1) && (count != n)) {
             a = if (b >= 100) {
@@ -325,11 +322,19 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
     var a = 0
-    for (m in 1..20) {
+    for (m in 1..36) {
         var b = fib(m)
         while ((b >= 1) && (count != n)) {
-            a = if (b >= 100) {
-                fib(m) / 100
+            a = if (b >= 1000000) {
+                fib(m) / 1000000
+            } else if (b >= 100000) {
+                (fib(m) / 100000) % 10
+            } else if (b >= 10000) {
+                (fib(m) / 10000) % 10
+            } else if (b >= 1000) {
+                (fib(m) / 1000) % 10
+            } else if (b >= 100) {
+                (fib(m) / 100) % 10
             } else if (b in 10..99) {
                 (fib(m) / 10) % 10
             } else fib(m) % 10
