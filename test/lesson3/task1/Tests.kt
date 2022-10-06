@@ -138,7 +138,6 @@ class Tests {
     @Tag("3")
     fun lcm() {
         assertEquals(13, lcm(13, 13))
-        assertEquals(9280386, lcm(4806, 11586))
         assertEquals(4, lcm(4, 4))
         assertEquals(8, lcm(2, 8))
         assertEquals(24, lcm(6, 8))
@@ -148,6 +147,8 @@ class Tests {
         assertEquals(2089830349, lcm(23579, 88631))
         assertEquals(2022222222, lcm(2, 1011111111))
         assertEquals(2022222222, lcm(1011111111, 2))
+        assertEquals(93467780, lcm(46340, 8068))
+        assertEquals(9280386, lcm(4806, 11586))
     }
 
     @Test
@@ -237,6 +238,7 @@ class Tests {
         assertEquals(9, squareSequenceDigit(27))
         assertEquals(8, squareSequenceDigit(71))
         assertEquals(6, squareSequenceDigit(159))
+        assertEquals(9, squareSequenceDigit(8373))
     }
 
     @Test
@@ -254,6 +256,5 @@ class Tests {
         assertEquals(5, fibSequenceDigit(14))
         assertEquals(2, fibSequenceDigit(20))
         assertEquals(2, fibSequenceDigit(58))
-        assertEquals(3, fibSequenceDigit(234))
     }
 }

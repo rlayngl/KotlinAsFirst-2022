@@ -96,8 +96,8 @@ fun timeForHalfWay(
     val s = s1 + s2 + s3
     return when {
         ((s1 + s2 > s / 2) && (s3 + s2 > s / 2)) -> (t1 + (s2 + s3 - s1) / (2 * v2))
-        (s1 > s / 2) -> (s / (2 * v1))
-        (s3 > s / 2) -> (t1 + t2 + t3 - (s / (2 * v3)))
+        (s1 >= s / 2) -> (s / (2 * v1))
+        (s3 >= s / 2) -> (t1 + t2 + t3 - (s / (2 * v3)))
         else -> 0.0
     }
 }

@@ -92,10 +92,21 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n == 1 || n == 2) {
-    1
-} else fib(n - 2) + fib(n - 1)
-
+fun fib(n: Int): Int {
+    var count = 2
+    var a = 1
+    var b = 1
+    var c = 0
+    if (n == 1 || n == 2) {
+        return 1
+    } else while (count != n)  {
+            c = a + b
+            count++
+            a = b
+            b = c
+        }
+    return c
+}
 
 /**
  * Простая (2 балла)
@@ -103,15 +114,11 @@ fun fib(n: Int): Int = if (n == 1 || n == 2) {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    val m = 2
-    for (m in 2..n) {
-        return if (m > n / 2) {
-            n
-        } else if (n % m == 0) {
-            m
-        } else continue
+    if (n % 2 == 0) return 2
+    for (m in 2..n / 3) {
+        if (n % m == 0) return m
     }
-    return m
+    return n
 }
 
 /**
@@ -120,15 +127,12 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    val m = 2
-    for (m in 2..n) {
-        return if (n % 2 == 0) {
-            n / 2
-        } else if (n % m == 0) {
-            n / m
-        } else continue
+    val m = 0
+    if (n % 2 == 0) return n / 2 else
+    for (m in n / 3 downTo 1) {
+        if (n % m == 0) return m
     }
-    return n / m
+    return m
 }
 
 /**
@@ -169,15 +173,12 @@ fun collatzSteps(x: Int): Int {
  */
 fun lcm(m: Int, n: Int): Int {
     val b = min(m, n)
-    var k = m * n
     if (m == n) {
         return m
-    } else for (a in b downTo 1) {
-         if ((m % a == 0) && (n % a == 0) && ((m * n) % a == 0)) {
-            k /= a
-        } else 0
+    } else for (a in b downTo 2) {
+        if ((m % a == 0) && (n % a == 0)) return m * n / a
     }
-    return k
+    return m * n
 }
 
 /**
@@ -188,9 +189,8 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var a = m
-    for (a in 2..sqrt(m.toDouble()).toInt())
-        for (a in 2..sqrt(n.toDouble()).toInt()) {
+    val c = min(m, n)
+    for (a in 2..sqrt(c.toDouble()).toInt()) {
             if (((m % a == 0) && (n % a == 0)) || ((m % n == 0) || n % m == 0)) {
                 return false
             }
@@ -296,23 +296,13 @@ fun cos(x: Double, eps: Double): Double = TODO() //пока не могу до �
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
     var a = 0
-    for (i in 1..1000) {
+    for (i in 1..3000000) {
         var b = sqr(i)
+        var c = revert(b)
         while ((b >= 1) && (count != n)) {
-            a = if (b >= 1000000) {
-                sqr(i) / 1000000
-            } else if (b >= 100000) {
-                (sqr(i) / 100000) % 10
-            } else if (b >= 10000) {
-                (sqr(i) / 10000) % 10
-            } else if (b >= 1000) {
-                (sqr(i) / 1000) % 10
-            } else if (b >= 100) {
-                (sqr(i) / 100) % 10
-            } else if (b in 10..99) {
-                (sqr(i) / 10) % 10
-            } else sqr(i) % 10
+            a = c % 10
             count++
+            c /= 10
             b /= 10
         }
     }
@@ -331,30 +321,14 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
     var a = 0
-    for (m in 1..41) {
+    for (m in 1..10000) {
         var b = fib(m)
+        var c = revert(b)
         while ((b >= 1) && (count != n)) {
-            a = if (b >= 1000000000) {
-                fib(m) / 1000000000
-            } else if (b >= 100000000) {
-                (fib(m) / 100000000) % 10
-            } else if (b >= 10000000) {
-                (fib(m) / 10000000) % 10
-            } else if (b >= 1000000) {
-                (fib(m) / 1000000) % 10
-            } else if (b >= 100000) {
-                (fib(m) / 100000) % 10
-            } else if (b >= 10000) {
-                (fib(m) / 10000) % 10
-            } else if (b >= 1000) {
-                (fib(m) / 1000) % 10
-            } else if (b >= 100) {
-                (fib(m) / 100) % 10
-            } else if (b in 10..99) {
-                (fib(m) / 10) % 10
-            } else fib(m)
+            a = c % 10
             count++
             b /= 10
+            c /= 10
         }
     }
     return a % 10
