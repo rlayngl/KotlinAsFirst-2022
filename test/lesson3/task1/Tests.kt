@@ -235,10 +235,12 @@ class Tests {
         assertEquals(9, squareSequenceDigit(11))
         assertEquals(6, squareSequenceDigit(12))
         assertEquals(0, squareSequenceDigit(17))
+        assertEquals(0, squareSequenceDigit(18))
         assertEquals(9, squareSequenceDigit(27))
         assertEquals(8, squareSequenceDigit(71))
         assertEquals(6, squareSequenceDigit(159))
         assertEquals(9, squareSequenceDigit(8373))
+        assertEquals(5, squareSequenceDigit(400507))
     }
 
     @Test
@@ -256,5 +258,25 @@ class Tests {
         assertEquals(5, fibSequenceDigit(14))
         assertEquals(2, fibSequenceDigit(20))
         assertEquals(2, fibSequenceDigit(58))
+        assertEquals(1, fibSequenceDigit(215))
+        assertEquals(1, fibSequenceDigit(216))
+        assertEquals(3, fibSequenceDigit(217))
+        assertEquals(4, fibSequenceDigit(218))
+        assertEquals(9, fibSequenceDigit(219))
+        assertEquals(0, fibSequenceDigit(220))
+        assertEquals(3, fibSequenceDigit(221))
+        assertEquals(1, fibSequenceDigit(222))
+        assertEquals(7, fibSequenceDigit(223))
+        assertEquals(0, fibSequenceDigit(224))
+        assertEquals(1, fibSequenceDigit(225))
+        assertEquals(8, fibSequenceDigit(226))
+        assertEquals(3, fibSequenceDigit(227))
+        assertEquals(6, fibSequenceDigit(228))
+        assertEquals(3, fibSequenceDigit(229))
+        assertEquals(1, fibSequenceDigit(230))
+        assertEquals(1, fibSequenceDigit(231))
+        assertEquals(9, fibSequenceDigit(232))
+        assertEquals(0, fibSequenceDigit(233))
+        assertEquals(3, fibSequenceDigit(234))
     }
 }

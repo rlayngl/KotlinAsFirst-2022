@@ -6,6 +6,7 @@ import lesson1.task1.sqr
 import kotlin.math.sqrt
 import kotlin.math.min
 import kotlin.math.abs
+import kotlin.math.pow
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -97,14 +98,17 @@ fun fib(n: Int): Int {
     var a = 1
     var b = 1
     var c = 0
-    if (n == 1 || n == 2) {
-        return 1
-    } else while (count != n)  {
+    if (n <= 46) {
+        if (n == 1 || n == 2) {
+            return 1
+        } else while (count != n) {
             c = a + b
             count++
             a = b
             b = c
         }
+
+    }
     return c
 }
 
@@ -127,12 +131,11 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    val m = 0
     if (n % 2 == 0) return n / 2 else
-    for (m in n / 3 downTo 1) {
-        if (n % m == 0) return m
-    }
-    return m
+        for (m in n / 3 downTo 1) {
+            if (n % m == 0) return m
+        }
+    return n
 }
 
 /**
@@ -191,10 +194,10 @@ fun lcm(m: Int, n: Int): Int {
 fun isCoPrime(m: Int, n: Int): Boolean {
     val c = min(m, n)
     for (a in 2..sqrt(c.toDouble()).toInt()) {
-            if (((m % a == 0) && (n % a == 0)) || ((m % n == 0) || n % m == 0)) {
-                return false
-            }
+        if (((m % a == 0) && (n % a == 0)) || ((m % n == 0) || n % m == 0)) {
+            return false
         }
+    }
     return true
 }
 
@@ -208,7 +211,6 @@ fun isCoPrime(m: Int, n: Int): Boolean {
 fun revert(n: Int): Int {
     var result = 0
     var number = n
-    if (n == 0) return 0
     while (number != 0) {
         result = result * 10 + number % 10
         number /= 10
@@ -272,7 +274,8 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double):Double = TODO() //пока не могу до конца понять условие задачи для ее решения
+fun sin(x: Double, eps: Double): Double = TODO() //пока не могу до конца понять условие задачи для ее решения
+
 /**
  * Средняя (4 балла)
  *
@@ -295,20 +298,24 @@ fun cos(x: Double, eps: Double): Double = TODO() //пока не могу до �
  */
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
-    var a = 0
-    for (i in 1..3000000) {
+    var result = 1
+    for (i in 1..n) {
+        var number = sqr(i)
         var b = sqr(i)
-        var c = revert(b)
+        var degree = -1
         while ((b >= 1) && (count != n)) {
-            a = c % 10
+            while (number > 0) {
+                degree++
+                number /= 10
+            }
+            result = ((sqr(i) / 10.0.pow(degree)).toInt()) % 10
             count++
-            c /= 10
+            degree--
             b /= 10
         }
     }
-    return a % 10
+    return result
 }
-
 /**
  * Сложная (5 баллов)
  *
@@ -320,16 +327,24 @@ fun squareSequenceDigit(n: Int): Int {
  */
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
-    var a = 0
-    for (m in 1..10000) {
-        var b = fib(m)
-        var c = revert(b)
+    var result = 1
+    for (i in 1..n) {
+        var number = fib(i)
+        var b = fib(i)
+        var degree = -1
         while ((b >= 1) && (count != n)) {
-            a = c % 10
+            while (number > 0) {
+                degree++
+                number /= 10
+            }
+            result = ((fib(i) / 10.0.pow(degree)).toInt()) % 10
             count++
+            degree--
             b /= 10
-            c /= 10
         }
     }
-    return a % 10
+    return result
 }
+
+
+
