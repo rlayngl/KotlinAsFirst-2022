@@ -117,18 +117,12 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    val rookX1Threatens = rookX1 == kingX
-    val rookX2Threatens = rookX2 == kingX
-    val rookY1OrY2Threatens = (rookY1 == kingY) || (rookY2 == kingY)
-    val rookY1AndY2Threatens = (rookY1 == kingY) && (rookY2 == kingY)
-    val rookX1OrY1Threatens = rookX1Threatens || (rookY1 == kingY)
-    val rookX2OrY2Threatens = rookX2Threatens || (rookY2 == kingY)
+    val rook1Threatens = (rookX1 == kingX) || (rookY1 == kingY)
+    val rook2Threatens = (rookX2 == kingX) || (rookY2 == kingY)
     return when {
-        (rookX1Threatens && (rookX2Threatens || rookY1OrY2Threatens)) ||
-        (rookX2Threatens && rookY1OrY2Threatens) ||
-        (rookY1AndY2Threatens) -> 3
-        rookX1OrY1Threatens -> 1
-        rookX2OrY2Threatens -> 2
+        (rook1Threatens && rook2Threatens)-> 3
+        rook1Threatens -> 1
+        rook2Threatens -> 2
         else -> 0
     }
 }
@@ -149,14 +143,12 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    val distanceByX = kingX - bishopX
-    val distanceByY = kingY - bishopY
-    val rookThreatensX = kingX == rookX
-    val rookThreatensY = kingY == rookY
+    val bishopThreatens = (abs(kingX - bishopX) == abs(kingY - bishopY))
+    val rookThreatens = (kingX == rookX) || (kingY == rookY)
     return when {
-        (abs(distanceByX) == abs(distanceByY)) && ((rookThreatensX || rookThreatensY)) -> 3
-        abs(distanceByX) == abs(distanceByY) -> 2
-        rookThreatensX || rookThreatensY -> 1
+        bishopThreatens && rookThreatens -> 3
+        bishopThreatens -> 2
+        rookThreatens -> 1
         else -> 0
     }
 }
