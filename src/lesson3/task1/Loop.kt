@@ -7,6 +7,7 @@ import kotlin.math.sqrt
 import kotlin.math.min
 import kotlin.math.abs
 import kotlin.math.pow
+import kotlin.math.max
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -98,16 +99,13 @@ fun fib(n: Int): Int {
     var a = 1
     var b = 1
     var c = 0
-    if (n <= 46) {
-        if (n == 1 || n == 2) {
-            return 1
-        } else while (count != n) {
-            c = a + b
-            count++
-            a = b
-            b = c
-        }
-
+    if (n == 1 || n == 2) {
+        return 1
+    } else while (count != n) {
+        c = a + b
+        count++
+        a = b
+        b = c
     }
     return c
 }
@@ -118,8 +116,7 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    if (n % 2 == 0) return 2
-    for (m in 2..n / 3) {
+    for (m in 2..sqrt(n.toDouble()).toInt()) {
         if (n % m == 0) return m
     }
     return n
@@ -131,11 +128,11 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    if (n % 2 == 0) return n / 2 else
-        for (m in n / 3 downTo 1) {
-            if (n % m == 0) return m
+    if (minDivisor(n) != n)
+    for (m in n / 2 downTo sqrt(n.toDouble()).toInt()) {
+        if (n % m == 0) return m
         }
-    return n
+    return 1
 }
 
 /**
@@ -192,11 +189,10 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    val c = min(m, n)
-    for (a in 2..sqrt(c.toDouble()).toInt()) {
-        if (((m % a == 0) && (n % a == 0)) || ((m % n == 0) || n % m == 0)) {
-            return false
-        }
+    val max = max(m, n)
+    val min = min(m, n)
+    for (a in 2..sqrt(min.toDouble()).toInt()) {
+        return !(((m % a == 0) && (n % a == 0)) || (max % min == 0))
     }
     return true
 }
@@ -251,17 +247,15 @@ fun isPalindrome(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var result = 0
-    var a = 0
+    var digit: Int
+    val lastDigit = n % 10
     var number = n
-    if (n == 0) return false
     while (number != 0) {
-        result = result * 10 + number % 10
+        digit = number % 10
         number /= 10
-        a = a * 10 + 1
+        if (digit != lastDigit) return true
     }
-    if (result == n && n / a == n % 10) return false
-    return true
+    return false
 }
 
 

@@ -5,7 +5,6 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson3.task1.isPrime
 import kotlin.math.sqrt
-import kotlin.math.pow
 
 
 // Урок 4: списки
@@ -204,8 +203,8 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    for (i in 0 until list.size) {
-        if (i > 0) list[i] += list[i - 1] else list[i]
+    for (i in 1 until list.size) {
+        list[i] += list[i - 1]
     }
     return list
 }
@@ -220,7 +219,8 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     var number = n
     val factorizedList = mutableListOf<Int>()
-    for (b in 2..number) {
+    if (isPrime(n)) factorizedList.add(n) && return factorizedList
+    for (b in 2..n) {
         while (number % b == 0) {
             factorizedList.add(b)
             number /= b
@@ -237,16 +237,7 @@ fun factorize(n: Int): List<Int> {
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
 fun factorizeToString(n: Int): String {
-    var number = n
-    val factorizedList = mutableListOf<Int>()
-    if (!isPrime(n)) {
-        for (b in 2..number) {
-            while (number % b == 0) {
-                factorizedList.add(b)
-                number /= b
-            }
-        }
-    } else return "$n"
+    val factorizedList = factorize(n)
     return factorizedList.joinToString(separator = "*")
 }
 
@@ -258,24 +249,25 @@ fun factorizeToString(n: Int): String {
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    var degree = 0
+    var maxBase = 1
     var number = n
+    var remainder = n
+    var digit: Int
+    var count = 1
+    val convertedList = mutableListOf<Int>()
     while (number / base != 0) {
-        degree++
         number /= base
+        maxBase *= base
+        count++
     }
-    var result = n
-    val convertedNumber = mutableListOf<Int>()
-    var count: Int
-    while (result >= 0) {
-        count = if ((base.toDouble().pow(degree)).toInt() > 0) {
-            result / (base.toDouble().pow(degree)).toInt()
-        } else break
-        convertedNumber.add(count)
-        result -= count * (base.toDouble().pow(degree)).toInt()
-        degree -= 1
+    while (count != 0) {
+        digit = remainder / maxBase
+        convertedList.add(digit)
+        remainder -= digit * maxBase
+        maxBase /= base
+        count--
     }
-    return convertedNumber
+    return convertedList
 }
 
 
@@ -315,9 +307,15 @@ fun convertToString(n: Int, base: Int): String {
 fun decimal(digits: List<Int>, base: Int): Int {
     var a = digits.size - 1
     var result = 0
+    var maxBase = 1
+    while (a != 0) {
+        maxBase *= base
+        a--
+    }
     for (i in digits.indices) {
-        result += digits[i] * (base.toDouble().pow(a)).toInt()
+        result += digits[i] * maxBase
         a -= 1
+        maxBase /= base
     }
     return result
 }
@@ -336,13 +334,11 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     var digits = 0
-    var degree = str.length - 1
     for (char in str) {
         var number = char.code
-        if (char in 'a'..'z') number -= 'a'.code - 10
-        else number -= '0'.code
-        digits += number * (base.toDouble()).pow(degree).toInt()
-        degree--
+        number -= if (char in 'a'..'z') 'a'.code - 10
+        else '0'.code
+        digits = digits * base + number
     }
     return digits
 }
@@ -358,7 +354,7 @@ fun decimalFromString(str: String, base: Int): Int {
 fun roman(n: Int): String {
     var number = n
     var roman = ""
-    val dictionary = mapOf(
+    val DICTIONARY = mapOf(
         1000 to "M",
          900 to "CM",
          500 to "D",
@@ -373,10 +369,10 @@ fun roman(n: Int): String {
            4 to "IV",
            1 to "I")
     while (number != 0) {
-        for (pair in dictionary) {
-            if (number >= pair.key) {
-                roman += pair.value
-                number -= pair.key
+        for ((key, value) in DICTIONARY) {
+            if (number >= key) {
+                roman += value
+                number -= key
                 break
             }
         }
