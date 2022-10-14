@@ -192,7 +192,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     val max = max(m, n)
     val min = min(m, n)
     for (a in 2..sqrt(min.toDouble()).toInt()) {
-        return !(((m % a == 0) && (n % a == 0)) || (max % min == 0))
+        if (((m % a == 0) && (n % a == 0)) || (max % min == 0)) return false
     }
     return true
 }
