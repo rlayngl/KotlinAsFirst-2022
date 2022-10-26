@@ -96,18 +96,17 @@ fun digitNumber(n: Int): Int {
  */
 fun fib(n: Int): Int {
     var count = 2
-    var a = 1
-    var b = 1
-    var c = 0
-    if (n == 1 || n == 2) {
-        return 1
-    } else while (count != n) {
-        c = a + b
+    var previousFibNumber = 1
+    var currentFibNumber = 1
+    var newFibNumber = 0
+    if (n == 1 || n == 2) return 1
+    while (count != n) {
+        newFibNumber = previousFibNumber + currentFibNumber
         count++
-        a = b
-        b = c
+        previousFibNumber = currentFibNumber
+        currentFibNumber = newFibNumber
     }
-    return c
+    return newFibNumber
 }
 
 /**
@@ -128,9 +127,9 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    if (minDivisor(n) != n)
-    for (m in n / 2 downTo sqrt(n.toDouble()).toInt()) {
-        if (n % m == 0) return m
+    if (isPrime(n)) return 1
+    for (divisor in n / 2 downTo sqrt(n.toDouble()).toInt()) {
+        if (n % divisor == 0) return divisor
         }
     return 1
 }
@@ -172,14 +171,15 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    val b = min(m, n)
-    if (m == n) {
-        return m
-    } else for (a in b downTo 2) {
-        if ((m % a == 0) && (n % a == 0)) return m * n / a
+    val min = min(m, n)
+    val max = max(m, n)
+    for (a in min downTo 2) {
+        if ((max % a == 0) && (min % a == 0)) return max / a * min
     }
-    return m * n
+    return max * min
 }
+
+
 
 /**
  * Средняя (3 балла)

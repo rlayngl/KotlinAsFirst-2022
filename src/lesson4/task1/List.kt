@@ -137,7 +137,8 @@ fun abs(v: List<Double>): Double {
  */
 fun mean(list: List<Double>): Double {
     if (list.isEmpty()) return 0.0
-    return list.sum() / list.size
+    return list.fold(0.0) {previousResult, element -> previousResult + element} / list.size
+//опробовал функцию высшего порядка fold, вместо простого list.sum()
 }
 
 /**
@@ -219,7 +220,6 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     var number = n
     val factorizedList = mutableListOf<Int>()
-    if (isPrime(n)) factorizedList.add(n) && return factorizedList
     for (b in 2..n) {
         while (number % b == 0) {
             factorizedList.add(b)
@@ -284,15 +284,16 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     var count = 9
+    val convertNumbers = convert(n, base)
     var result = ""
-    for (element in convert(n, base).indices) {
-        if (convert(n, base)[element] > 9) {
+    for (element in convertNumbers.indices) {
+        if (convertNumbers[element] > 9) {
             for (letter in 'a'..'z') {
                 count++
-                if (count == convert(n, base)[element]) result += letter
+                if (count == convertNumbers[element]) result += letter
             }
             count = 9
-        } else result += convert(n, base)[element]
+        } else result += convertNumbers[element]
     }
     return result
 }
@@ -336,8 +337,7 @@ fun decimalFromString(str: String, base: Int): Int {
     var digits = 0
     for (char in str) {
         var number = char.code
-        number -= if (char in 'a'..'z') 'a'.code - 10
-        else '0'.code
+        number -= if (char in 'a'..'z') 'a'.code - 10 else '0'.code
         digits = digits * base + number
     }
     return digits
