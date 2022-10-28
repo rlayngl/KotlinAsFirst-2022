@@ -188,6 +188,13 @@ class Tests {
                 mapOf("Emergency" to "911", "Police" to "02")
             )
         )
+        assertEquals(
+            mapOf("Emergency" to "112, 911", "Police" to "02, 102", "Ambulance" to "03, 103", "Fire department" to "01"),
+            mergePhoneBooks(
+                mapOf("Emergency" to "112", "Fire department" to "01", "Ambulance" to "03", "Police" to "02"),
+                mapOf("Emergency" to "911", "Police" to "102", "Ambulance" to "103")
+            )
+        )
     }
 
     @Test
@@ -208,6 +215,10 @@ class Tests {
         assertEquals(
             mapOf("MSFT" to 150.0, "NFLX" to 45.0),
             averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0, "NFLX" to 50.0))
+        )
+        assertEquals(
+            mapOf("MSFT" to 200.0, "NFLX" to 45.0),
+            averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "MSFT" to 300.0, "NFLX" to 40.0, "NFLX" to 50.0, "MSFT" to 200.0))
         )
     }
 
@@ -251,6 +262,10 @@ class Tests {
         assertEquals(
             emptyMap<String, Int>(),
             extractRepeats(listOf("a", "b", "c"))
+        )
+        assertEquals(
+            mapOf(("a" to 4), ("b" to 2), ("c" to 3)),
+            extractRepeats(listOf("a", "b", "a", "a", "c", "c", "b", "l", "c", "a"))
         )
     }
 
