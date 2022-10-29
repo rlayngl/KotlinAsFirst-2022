@@ -3,6 +3,7 @@
 package lesson5.task1
 
 
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -274,7 +275,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     if (word == "") return true
     if (chars.isEmpty()) return false
     for (char in chars) {
-        if (char !in word) return false
+        if (char.lowercase() !in word) return false
     }
     return true
 }
@@ -331,6 +332,7 @@ fun hasAnagrams(words: List<String>): Boolean {
         val alphabetedListOfChars1 = listOfChars1.sorted() as MutableList<Char>
         var alphabetedListOfChars2: MutableList<Char>
         for (word2 in words) {
+            if (word2 == "") continue
             if (words.indexOf(word2) == count) continue
             val listOfChars2 = mutableListOf<Char>()
             for (char in word2) {
