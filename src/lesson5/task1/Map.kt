@@ -274,10 +274,16 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     if (word == "") return true
     if (chars.isEmpty()) return false
-    for (char in chars) {
-        if (char.lowercase() !in word) return false
+    val wordByLetters = mutableListOf<Char>()
+    for (letter in word) {
+        wordByLetters += letter
     }
-    return true
+    var count = wordByLetters.distinct().size
+    for (char in chars) {
+        if (char.lowercase() in word) count--
+        if (count == 0) return true
+    }
+    return false
 }
 
 /**
