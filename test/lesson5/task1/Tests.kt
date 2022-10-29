@@ -123,7 +123,7 @@ class Tests {
     fun containsIn() {
         assertTrue(containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")))
         assertFalse(containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")))
-        assertTrue(containsIn(mapOf(), mapOf()))
+        assertTrue(containsIn(mapOf(), mapOf("" to "")))
     }
 
     @Test
@@ -159,6 +159,10 @@ class Tests {
         assertEquals(
             listOf(""),
             whoAreInBoth(listOf(""), listOf("", ""))
+        )
+        assertEquals(
+            listOf("a"),
+            whoAreInBoth(listOf("", "a"), listOf("a"))
         )
     }
 
@@ -252,6 +256,7 @@ class Tests {
         assertTrue(canBuildFrom(emptyList(), ""))
         assertTrue(canBuildFrom(listOf('a', 'b', 'o'), "baobab"))
         assertFalse(canBuildFrom(listOf('a', 'm', 'r'), "Marat"))
+        assertTrue(canBuildFrom(listOf('a'), ""))
     }
 
     @Test
@@ -278,13 +283,14 @@ class Tests {
     @Test
     @Tag("3")
     fun hasAnagrams() {
-        assertFalse(hasAnagrams(emptyList()))
+        assertFalse(hasAnagrams(listOf("рот")))
         assertTrue(hasAnagrams(listOf("рот", "свет", "тор")))
         assertFalse(hasAnagrams(listOf("рот", "свет", "код", "дверь")))
         assertFalse(hasAnagrams(listOf("поле", "полено")))
         assertTrue(hasAnagrams(listOf("лунь", "нуль")))
         assertFalse(hasAnagrams(listOf("рот")))
         assertFalse(hasAnagrams(listOf("")))
+        assertTrue(hasAnagrams(listOf("", "")))
     }
 
     @Test

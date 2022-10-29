@@ -119,7 +119,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    if (a.isEmpty() && b.isEmpty()) return true
+    if (a.isEmpty()) return true
     for ((first,_) in a) {
         return ((first in b) && a[first] == b[first])
     }
@@ -158,7 +158,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
     val resultList = mutableListOf<String>()
     for (element in b.indices) {
-        if ((b[element] in a) && (b[element] !in resultList)) resultList.add(a[element])
+        if ((b[element] in a) && (b[element] !in resultList)) resultList.add(b[element])
     }
     return resultList
 }
@@ -271,7 +271,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    if (chars.isEmpty() && word == "") return true
+    if (word == "") return true
+    if (chars.isEmpty()) return false
     for (char in chars) {
         if (char !in word) return false
     }
@@ -316,7 +317,13 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  */
 fun hasAnagrams(words: List<String>): Boolean {
     if (words.size == 1) return false
+    var count2 = 0
     for ((count, word1) in words.withIndex()) {
+        if (word1 == "") {
+            count2++
+            if (count2 == 2) return true
+            continue
+            }
         val listOfChars1 = mutableListOf<Char>()
         for (char in word1) {
             listOfChars1 += char
