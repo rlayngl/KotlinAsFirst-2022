@@ -255,10 +255,11 @@ class Tests {
         assertFalse(canBuildFrom(emptyList(), "foo"))
         assertTrue(canBuildFrom(emptyList(), ""))
         assertTrue(canBuildFrom(listOf('a', 'b', 'o'), "baobab"))
-        assertFalse(canBuildFrom(listOf('a', 'm', 'r'), "Marat"))
+        assertFalse(canBuildFrom(listOf('a', 'M', 'r'), "Marat"))
         assertFalse(canBuildFrom(listOf('a', 'q', 'r', 'm'), "Marat"))
         assertTrue(canBuildFrom(listOf('a'), ""))
         assertTrue(canBuildFrom(listOf('A'), "a"))
+        assertTrue(canBuildFrom(listOf('a'), "A"))
     }
 
     @Test

@@ -280,7 +280,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     }
     var count = wordByLetters.distinct().size
     for (char in chars) {
-        if (char.lowercase() in word) count--
+        if (char.lowercase() in word.toLowerCase()) count--
         if (count == 0) return true
     }
     return false
