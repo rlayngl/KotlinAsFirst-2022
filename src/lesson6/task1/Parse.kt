@@ -91,8 +91,8 @@ fun dateStrToDigit(str: String): String {
          "октября" to "10",
           "ноября" to "11",
          "декабря" to "12")
-    val day = parts[0].toInt()
     if ((parts.size < 3) || (parts[1] !in calendar)) return ""
+    val day = parts[0].toInt()
     val month = (calendar[parts[1]])!!.toInt()
     val year = parts[2].toInt()
     if (day > daysInMonth(month, year)) return ""
