@@ -2,8 +2,6 @@
 
 package lesson5.task1
 
-import java.util.*
-
 
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
@@ -275,14 +273,19 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     if (word == "") return true
     if (chars.isEmpty()) return false
+    val charsWithLowerCase = mutableListOf<Char>()
+    for (char in chars) {
+        charsWithLowerCase += char.lowercaseChar()
+    }
     val wordByLetters = mutableListOf<Char>()
     for (letter in word) {
-        wordByLetters += letter
+        wordByLetters += letter.lowercaseChar()
     }
-    var count = wordByLetters.distinct().size
-    for (char in chars) {
-        if (char.lowercase() in word.lowercase(Locale.getDefault())) count--
-        if (count == 0) return true
+    val wordByUniqueLetters = wordByLetters.distinct() as MutableList<Char>
+    var count = 0
+    for (char in wordByUniqueLetters) {
+        if (char in charsWithLowerCase) count++
+        if (count == wordByUniqueLetters.size) return true
     }
     return false
 }
