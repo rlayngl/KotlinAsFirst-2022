@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+import java.util.*
 
 
 // Урок 5: ассоциативные массивы и множества
@@ -280,7 +281,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     }
     var count = wordByLetters.distinct().size
     for (char in chars) {
-        if (char.lowercase() in word.toLowerCase()) count--
+        if (char.lowercase() in word.lowercase(Locale.getDefault())) count--
         if (count == 0) return true
     }
     return false
