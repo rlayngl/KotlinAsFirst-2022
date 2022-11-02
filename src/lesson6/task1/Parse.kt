@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import java.lang.NumberFormatException
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -109,7 +110,28 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val parts = digital.split(".")
+    val calendar = mapOf(
+        "01" to "января",
+        "02" to "февраля",
+        "03" to "марта",
+        "04" to "апреля",
+        "05" to "мая",
+        "06" to "июня",
+        "07" to "июля",
+        "08" to "августа",
+        "09" to "сентября",
+        "10" to "октября",
+        "11" to "ноября",
+        "12" to "декабря")
+    if ((parts.size != 3) || (parts[1] !in calendar)) return ""
+    val day = parts[0].toInt()
+    val month = (calendar[parts[1]])!!
+    val year = parts[2].toInt()
+    if (day > daysInMonth(parts[1].toInt(), year)) return ""
+    return String.format("%d %s %d", day, month, year)
+}
 
 /**
  * Средняя (4 балла)
@@ -125,7 +147,24 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var result = ""
+    if (phone.startsWith("+"))  {
+        result += "+"
+    }
+    val parts = phone.removePrefix("+").split("-", " ", "(", ")")
+    if ("()" in phone) return ""
+    try {
+        for (part in parts) {
+            if (part == "()") return ""
+            if (part == "") continue
+            result += "${part.toInt()}"
+        }
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    return result
+}
 
 /**
  * Средняя (5 баллов)
