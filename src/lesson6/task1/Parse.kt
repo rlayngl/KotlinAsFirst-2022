@@ -176,7 +176,19 @@ fun flattenPhoneNumber(phone: String): String {
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    var result = -1
+    val parts = jumps.removePrefix("+").split("-", " ", "%")
+    try {
+        for (part in parts) {
+            if (part == "") continue
+            if (part.toInt() > result) result = part.toInt()
+        }
+    } catch (e: NumberFormatException) {
+        return -1
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -189,7 +201,23 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if ("+" !in jumps) return -1
+    val parts = jumps.split(" ")
+    var result = -1
+    var intermediateResult = -1
+    try {
+        for (part in parts) {
+            if ("+" in part) result = intermediateResult
+            if (("-" in part) || ("%" in part) || ("+" in part)) {
+                continue
+            } else intermediateResult = part.toInt()
+        }
+    } catch (e: NumberFormatException) {
+        return -1
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -201,6 +229,17 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int = TODO()
+/**{
+    var check = 0
+    var result = 0
+    val parts = expression.split(" ")
+    for (part in parts) {
+        if ((part == "+") && (check == 1)) throw IllegalArgumentException() else check = 1
+        if ((part == "-") && (check == 1)) throw IllegalArgumentException() else check = 1
+        if (check == 2) throw IllegalArgumentException() else check = 2
+        result
+    }
+} */
 
 /**
  * Сложная (6 баллов)
