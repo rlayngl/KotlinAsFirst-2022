@@ -120,8 +120,10 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     if (a.isEmpty()) return true
+    var count = 0
     for ((first,_) in a) {
-        return ((first in b) && a[first] == b[first])
+        if ((first in b) && a[first] == b[first]) count++
+        return (count == a.size)
     }
     return false
 }
