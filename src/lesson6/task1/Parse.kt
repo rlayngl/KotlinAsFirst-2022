@@ -232,13 +232,21 @@ fun plusMinus(expression: String): Int = TODO()
 /**{
     var check = 0
     var result = 0
-    val parts = expression.split(" ")
+    var multiplier = 1
+    val parts= expression.split(" ")
     for (part in parts) {
-        if ((part == "+") && (check == 1)) throw IllegalArgumentException() else check = 1
-        if ((part == "-") && (check == 1)) throw IllegalArgumentException() else check = 1
-        if (check == 2) throw IllegalArgumentException() else check = 2
-        result
+        if (((part == "+") || (part == "-")) && (check == 1)) throw IllegalArgumentException()
+        if ((part == "+") || (part == "-")) check = 1
+        if (part == "+") multiplier = 1
+        if (part == "-") multiplier = -1
+        try {
+            if ((part != "+") && (part != "-")) {
+                result += part.toInt() * multiplier
+                check = 0
+            }
+        } catch (e: NumberFormatException) { throw IllegalArgumentException() }
     }
+    return result
 } */
 
 /**
@@ -250,7 +258,19 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var count = 0
+    var wordMemory = ""
+    val words = str.split(" ")
+    for ((index, word) in words.withIndex()) {
+        if (word.lowercase() == wordMemory.lowercase()) return count
+        if (index > 0) {
+            count += words[index - 1].length + 1
+        }
+        wordMemory = word
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
@@ -263,7 +283,30 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (description == "") return ""
+    val pair = description.split("; ")
+    var count = 0
+    var highestPrice = 0.0
+    var productName = ""
+    var theMostExpensiveProduct = ""
+    for (product in pair) {
+        val nameAndPrice = product.split(" ")
+        for (characteristic in nameAndPrice) {
+            if (count % 2 == 0) {
+                productName = characteristic
+                count++
+                continue
+            }
+            if (characteristic.toDouble() > highestPrice) {
+                theMostExpensiveProduct = productName
+                highestPrice = characteristic.toDouble()
+            }
+            count++
+        }
+    }
+    return theMostExpensiveProduct
+}
 
 /**
  * Сложная (6 баллов)
@@ -276,7 +319,49 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    val revertedString = revertedString(roman) //функция ниже
+    val romanNumbers = mapOf(
+         "M" to 1000,
+        "CM" to 900,
+         "D" to 500,
+        "CD" to 400,
+         "C" to 100,
+        "XC" to 90,
+         "L" to 50,
+        "XL" to 40,
+         "X" to 10,
+        "IX" to 9,
+         "V" to 5,
+        "IV" to 4,
+         "I" to 1)
+    val parts = revertedString.split("")
+    val letters = parts.toMutableList()
+    letters -= parts[0] //поскольку при делении строки через "" в начале и в конце остаются лишние элементы
+    letters -= parts[parts.size - 1]
+    var memory = 0
+    var result = 0
+    for (part in letters) {
+        if (part !in romanNumbers) return -1
+        for ((key, value) in romanNumbers) {
+            if (part == key) {
+                if (value < memory) result -= value else result += value
+                memory = value
+                break
+            } else continue
+        }
+    }
+    return result
+}
+fun revertedString(str: String): String {
+    var count = str.length - 1
+    var result = ""
+    while (count != -1) {
+        result += str[count]
+        count--
+    }
+    return result
+}
 
 /**
  * Очень сложная (7 баллов)

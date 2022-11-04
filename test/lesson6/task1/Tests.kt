@@ -121,6 +121,7 @@ class Tests {
         assertEquals("", mostExpensive(""))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
+        assertEquals("Кофе", mostExpensive("Кола 79.99; Колбаса 150.0; Сыр 100.0; Кофе 758.0; Чай 199.9"))
     }
 
     @Test
@@ -133,6 +134,13 @@ class Tests {
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
     }
+
+    @Test
+    @Tag("0")
+    fun revertedString() {
+        assertEquals("fedcba", lesson6.task1.revertedString("abcdef"))
+    }
+
 
     @Test
     @Tag("7")
