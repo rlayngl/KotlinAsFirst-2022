@@ -113,6 +113,7 @@ class Tests {
         assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
+        assertEquals(-1, firstDuplicateIndex(""))
     }
 
     @Test
@@ -122,6 +123,7 @@ class Tests {
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
         assertEquals("Кофе", mostExpensive("Кола 79.99; Колбаса 150.0; Сыр 100.0; Кофе 758.0; Чай 199.9"))
+        assertEquals("a", mostExpensive("a 0"))
     }
 
     @Test
@@ -133,12 +135,13 @@ class Tests {
         assertEquals(694, fromRoman("DCXCIV"))
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
+        assertEquals(-1, fromRoman(""))
     }
 
     @Test
     @Tag("0")
     fun revertedString() {
-        assertEquals("fedcba", lesson6.task1.revertedString("abcdef"))
+        assertEquals("fedcba", revertedString("abcdef"))
     }
 
 

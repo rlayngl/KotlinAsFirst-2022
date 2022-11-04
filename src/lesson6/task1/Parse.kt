@@ -261,6 +261,7 @@ fun plusMinus(expression: String): Int = TODO()
 fun firstDuplicateIndex(str: String): Int {
     var count = 0
     var wordMemory = ""
+    if (str == "") return -1
     val words = str.split(" ")
     for ((index, word) in words.withIndex()) {
         if (word.lowercase() == wordMemory.lowercase()) return count
@@ -298,7 +299,7 @@ fun mostExpensive(description: String): String {
                 count++
                 continue
             }
-            if (characteristic.toDouble() > highestPrice) {
+            if (characteristic.toDouble() >= highestPrice) {
                 theMostExpensiveProduct = productName
                 highestPrice = characteristic.toDouble()
             }
@@ -335,6 +336,7 @@ fun fromRoman(roman: String): Int {
          "V" to 5,
         "IV" to 4,
          "I" to 1)
+    if (roman == "") return -1
     val parts = revertedString.split("")
     val letters = parts.toMutableList()
     letters -= parts[0] //поскольку при делении строки через "" в начале и в конце остаются лишние элементы
