@@ -466,7 +466,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         intermediateResult = characteristic1.second
         for ((name2, characteristic2) in possibleVariants) {
             if ((name1 != name2)
-                && (weightOfProducts + characteristic2.first < capacity)
+                && (weightOfProducts + characteristic2.first <= capacity)
                 && (intermediateResult + characteristic2.second > resultPrice))
             {
                 preIntermediateMapOfProducts += name2 to characteristic2
