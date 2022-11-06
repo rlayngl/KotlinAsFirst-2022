@@ -3,6 +3,7 @@
 package lesson5.task1
 
 
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -443,8 +444,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val possibleVariants = mutableMapOf<String, Pair<Int, Int>>()
-    val result = mutableSetOf<String>()
-    var revertedResult = mutableListOf<String>() //то же, что и result, только его элементы расположены в обратном порядке
+    var result = mutableListOf<String>() //то же, что и result, только его элементы расположены в обратном порядке
     val preResult = mutableSetOf<String>()
     for ((name, characteristic) in treasures) {
         if (characteristic.first <= capacity) {
@@ -456,8 +456,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     var weightOfProducts: Int
     var intermediateResult: Int
     var resultPrice = 0
+    var intermediateMapOfProducts = emptyMap<String, Pair<Int, Int>>()
     for ((name1, characteristic1) in possibleVariants) {  //сразу перебирает два массива, чтобы найти саммые ценные сокровища
         val listOfNames = emptyList<String>().toMutableList()
+        val preIntermediateMapOfProducts = emptyMap<String, Pair<Int, Int>>().toMutableMap()
+        preIntermediateMapOfProducts += name1 to characteristic1
         listOfNames += name1
         weightOfProducts = characteristic1.first
         intermediateResult = characteristic1.second
@@ -466,6 +469,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 && (weightOfProducts + characteristic2.first <= capacity)
                 && (intermediateResult + characteristic2.second > resultPrice))
             {
+                preIntermediateMapOfProducts += name2 to characteristic2
                 weightOfProducts += characteristic2.first
                 intermediateResult += characteristic2.second
                 listOfNames += name2
@@ -473,12 +477,51 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
         if (intermediateResult > resultPrice) {
             resultPrice = intermediateResult
-            revertedResult = listOfNames
+            result = listOfNames
+            intermediateMapOfProducts = preIntermediateMapOfProducts
         }
     }
-    var count = revertedResult.size - 1
-    for (name in revertedResult) {
-        result += revertedResult[count]
+    if (intermediateMapOfProducts.size < treasures.size) {
+        val difference = emptyMap<String, Pair<Int, Int>>().toMutableMap()
+        for ((name, characteristic) in treasures) {
+            if (name !in intermediateMapOfProducts) difference += name to characteristic
+        }
+        for ((name2, characteristic2) in difference) {
+            for ((name1, characteristic1) in revertedMap(treasures)) {
+                if ((characteristic1.first > characteristic2.first)
+                    && (characteristic1.second <= characteristic2.second)) {
+                    result.add(name2)
+                    result.remove(name1)
+                    break
+                }
+            }
+        }
+    }
+    return revertedSet(result)
+}
+
+
+fun revertedMap(treasures: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {    //создана, чтобы создать массив, обратный входному
+    val listOfNames = mutableListOf<String>()
+    val listOfWeights = mutableListOf<Int>()
+    val listOfPrices = mutableListOf<Int>()
+    for ((name, characteristic) in treasures) {
+        listOfNames.add(0, name)
+        listOfWeights.add(0, characteristic.first)
+        listOfPrices.add(0, characteristic.second)
+    }
+    val result = mutableMapOf<String, Pair<Int,Int>>()
+    for (name in listOfNames) {
+        result += name to (listOfWeights[listOfNames.indexOf(name)] to (listOfPrices[listOfNames.indexOf(name)]))
+    }
+    return result
+}
+
+fun revertedSet(set: List<String>): Set<String> {  //создана, чтобы создавать из списка множество с элементами расположенными в обратном порядке
+    val result = mutableSetOf<String>()
+    var count = set.size - 1
+    for (element in set) {
+        result += set[count]
         count--
     }
     return result

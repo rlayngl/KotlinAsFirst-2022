@@ -199,7 +199,12 @@ class Tests {
             )
         )
         assertEquals(
-            mapOf("Emergency" to "112, 911", "Police" to "02, 102", "Ambulance" to "03, 103", "Fire department" to "01"),
+            mapOf(
+                "Emergency" to "112, 911",
+                "Police" to "02, 102",
+                "Ambulance" to "03, 103",
+                "Fire department" to "01"
+            ),
             mergePhoneBooks(
                 mapOf("Emergency" to "112", "Fire department" to "01", "Ambulance" to "03", "Police" to "02"),
                 mapOf("Emergency" to "911", "Police" to "102", "Ambulance" to "103")
@@ -228,7 +233,16 @@ class Tests {
         )
         assertEquals(
             mapOf("MSFT" to 200.0, "NFLX" to 45.0),
-            averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "MSFT" to 300.0, "NFLX" to 40.0, "NFLX" to 50.0, "MSFT" to 200.0))
+            averageStockPrice(
+                listOf(
+                    "MSFT" to 100.0,
+                    "MSFT" to 200.0,
+                    "MSFT" to 300.0,
+                    "NFLX" to 40.0,
+                    "NFLX" to 50.0,
+                    "MSFT" to 200.0
+                )
+            )
         )
     }
 
@@ -375,17 +389,77 @@ class Tests {
             )
         )
         assertEquals(
-            setOf("Кольцо", "Цепь", "Слиток"),
+            setOf("Кольцо", "Цепь", "Кубок"),
             bagPacking(
-                mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000), "Цепь" to (200 to 4000), "Кольцо" to (100 to 1000)),
+                mapOf(
+                    "Кубок" to (500 to 2000),
+                    "Слиток" to (1000 to 50),
+                    "Цепь" to (200 to 4000),
+                    "Кольцо" to (100 to 1000)
+                ),
                 1500
             )
         )
         assertEquals(
             setOf("Кольцо", "Цепь"),
             bagPacking(
-                mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000), "Цепь" to (200 to 4000), "Кольцо" to (100 to 1000)),
+                mapOf(
+                    "Кубок" to (500 to 2000),
+                    "Слиток" to (1000 to 5000),
+                    "Цепь" to (200 to 4000),
+                    "Кольцо" to (100 to 1000)
+                ),
                 600
+            )
+        )
+        assertEquals(
+            setOf("17", "16", "15", "14", "13", "12", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 1),
+                    "2" to (1 to 1),
+                    "3" to (1 to 1),
+                    "4" to (1 to 1),
+                    "5" to (152 to 1),
+                    "6" to (497 to 1),
+                    "7" to (457 to 1),
+                    "8" to (1 to 1),
+                    "9" to (1 to 1),
+                    "10" to (1 to 1),
+                    "11" to (368 to 1),
+                    "12" to (1 to 1),
+                    "13" to (149 to 484),
+                    "14" to (480 to 331),
+                    "15" to (1 to 324),
+                    "16" to (149 to 324),
+                    "17" to (140 to 299)
+                ),
+                2351
+            )
+        )
+    }
+
+
+    @Test
+    @Tag("0")
+    fun revertedMap() {
+        assertEquals(
+            mapOf("3" to (5 to 8), "2" to (9 to 1), "1" to (0 to 11), "0" to (2 to 3)),
+            revertedMap(
+                mapOf("0" to (2 to 3), "1" to (0 to 11), "2" to (9 to 1), "3" to (5 to 8))
+            )
+        )
+    }
+
+
+    @Test
+    @Tag("0")
+    fun revertedSet() {
+        assertEquals(
+            setOf("4", "3", "2", "1"),
+            revertedSet(
+                listOf("1", "2", "3", "4")
             )
         )
     }
