@@ -388,6 +388,14 @@ class Tests {
                 450
             )
         )
+
+        assertEquals(
+            setOf("1", "0"),
+            bagPacking(
+                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1), "3" to (2 to 1)),
+                2
+            )
+        )
         assertEquals(
             setOf("1", "0"),
             bagPacking(
@@ -396,11 +404,11 @@ class Tests {
             )
         )
         assertEquals(
-            setOf("Кольцо", "Цепь", "Кубок"),
+            setOf("Кольцо", "Цепь", "Слиток"),
             bagPacking(
                 mapOf(
                     "Кубок" to (500 to 2000),
-                    "Слиток" to (1000 to 50),
+                    "Слиток" to (1000 to 5000),
                     "Цепь" to (200 to 4000),
                     "Кольцо" to (100 to 1000)
                 ),
