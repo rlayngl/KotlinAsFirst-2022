@@ -455,10 +455,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     if (preResult.size == 1) return preResult
     var weightOfProducts: Int
     var intermediateResult: Int
-    var resultPrice = 0
     var resultWeight = 0
     var intermediateMapOfProducts = emptyMap<String, Pair<Int, Int>>()
-    for ((name1, characteristic1) in possibleVariants) {  //сразу перебирает два массива, чтобы найти саммые ценные сокровища
+    for ((name1, characteristic1) in possibleVariants) {  //оставляет первый элемент массива, после чего перебирает его еще раз
         val listOfNames = emptyList<String>().toMutableList()
         val preIntermediateMapOfProducts = emptyMap<String, Pair<Int, Int>>().toMutableMap()
         preIntermediateMapOfProducts += name1 to characteristic1
@@ -467,8 +466,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         intermediateResult = characteristic1.second
         for ((name2, characteristic2) in possibleVariants) {
             if ((name1 != name2)
-                && (weightOfProducts + characteristic2.first <= capacity)
-                && (intermediateResult + characteristic2.second > resultPrice))
+                && (weightOfProducts + characteristic2.first <= capacity))
             {
                 preIntermediateMapOfProducts += name2 to characteristic2
                 weightOfProducts += characteristic2.first
@@ -476,21 +474,28 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 listOfNames += name2
             }
         }
-        if (intermediateResult > resultPrice) { //массив с самым выгодной комбинацией сокровищ
-            resultPrice = intermediateResult
-            result = listOfNames
-            resultWeight = weightOfProducts
-            intermediateMapOfProducts = preIntermediateMapOfProducts
-        }
+        result = listOfNames
+        resultWeight = weightOfProducts
+        intermediateMapOfProducts = preIntermediateMapOfProducts
+        break
     }
     if (intermediateMapOfProducts.size < treasures.size) { //поиск тяжелых, но не таких ценных сокровищ, которые можно заменить
-        for ((name2, characteristic2) in differenceOfMaps(possibleVariants, intermediateMapOfProducts)) {
+        for ((name2, characteristic2)
+        in differenceOfMaps(possibleVariants, intermediateMapOfProducts)){
             for ((name1, characteristic1) in revertedMap(intermediateMapOfProducts)) {
-                if ((characteristic2.second > characteristic1.second)
-                    && (characteristic2.first + resultWeight - characteristic1.first <= capacity)) {
-                    result.add(name2)
-                    result.remove(name1)
-                    break
+                if ((characteristic2.first + resultWeight - characteristic1.first <= capacity)) {
+                    if ((characteristic2.first + resultWeight > capacity)
+                        && (characteristic2.second > characteristic1.second)) {
+                        resultWeight = resultWeight - characteristic1.first + characteristic2.first
+                        result.remove(name1)
+                        result.add(name2)
+                        break
+                    }
+                    if (characteristic2.first + resultWeight <= capacity) {
+                        result.add(name2)
+                        resultWeight += characteristic2.first
+                        break
+                    }
                 }
             }
         }
