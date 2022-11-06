@@ -443,7 +443,8 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val possibleVariants = mutableMapOf<String, Pair<Int, Int>>()
-    var result = mutableSetOf<String>()
+    val result = mutableSetOf<String>()
+    var revertedResult = mutableListOf<String>() //то же, что и result, только его элементы расположены в обратном порядке
     val preResult = mutableSetOf<String>()
     for ((name, characteristic) in treasures) {
         if (characteristic.first <= capacity) {
@@ -456,8 +457,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     var intermediateResult: Int
     var resultPrice = 0
     for ((name1, characteristic1) in possibleVariants) {  //сразу перебирает два массива, чтобы найти саммые ценные сокровища
-        val setOfNames = emptySet<String>().toMutableSet()
-        setOfNames += name1
+        val listOfNames = emptyList<String>().toMutableList()
+        listOfNames += name1
         weightOfProducts = characteristic1.first
         intermediateResult = characteristic1.second
         for ((name2, characteristic2) in possibleVariants) {
@@ -467,13 +468,18 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             {
                 weightOfProducts += characteristic2.first
                 intermediateResult += characteristic2.second
-                setOfNames += name2
+                listOfNames += name2
             }
         }
         if (intermediateResult > resultPrice) {
             resultPrice = intermediateResult
-            result = setOfNames
+            revertedResult = listOfNames
         }
+    }
+    var count = revertedResult.size - 1
+    for (name in revertedResult) {
+        result += revertedResult[count]
+        count--
     }
     return result
 }

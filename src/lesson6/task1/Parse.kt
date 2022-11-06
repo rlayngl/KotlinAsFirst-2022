@@ -156,8 +156,8 @@ fun flattenPhoneNumber(phone: String): String {
     if ("()" in phone) return ""
     try {
         for (part in parts) {
-            if (part == "()") return ""
             if (part == "") continue
+            if (part == "()") return ""
             result += "${part.toInt()}"
         }
     } catch (e: NumberFormatException) {
