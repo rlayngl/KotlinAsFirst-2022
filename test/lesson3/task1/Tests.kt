@@ -152,6 +152,15 @@ class Tests {
     }
 
     @Test
+    @Tag("0")
+    fun algorithmOfEuclid() {
+        assertEquals(6, algorithmOfEuclid(30, 18))
+        assertEquals(20, algorithmOfEuclid(40, 20))
+        assertEquals(50, algorithmOfEuclid(50, 50))
+        assertEquals(1, algorithmOfEuclid(1357, 9863))
+    }
+
+    @Test
     @Tag("3")
     fun isCoPrime() {
         assertTrue(isCoPrime(25, 49))
@@ -159,9 +168,11 @@ class Tests {
         assertTrue(isCoPrime(17, 97))
         assertFalse(isCoPrime(37, 111))
         assertFalse(isCoPrime(16107, 20391))
+        assertFalse(isCoPrime(783, 95149))
         assertTrue(isCoPrime(1234567890, 908765431))
         assertTrue(isCoPrime(2109876543, 1234567891))
     }
+
 
     @Test
     @Tag("3")

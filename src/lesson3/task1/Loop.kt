@@ -126,13 +126,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    if (isPrime(n)) return 1
-    for (divisor in n / 2 downTo sqrt(n.toDouble()).toInt()) {
-        if (n % divisor == 0) return divisor
-        }
-    return 1
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая (2 балла)
@@ -170,16 +164,18 @@ fun collatzSteps(x: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    val min = min(m, n)
-    val max = max(m, n)
-    for (a in min downTo 2) {
-        if ((max % a == 0) && (min % a == 0)) return max / a * min
+fun lcm(m: Int, n: Int): Int = m * n / algorithmOfEuclid(m, n)
+
+
+fun algorithmOfEuclid(a: Int, b: Int): Int {
+    var max = max(a, b)
+    var min = min(a, b)
+    while (max % min != 0) {
+        max %= min
+        min -= max
     }
-    return max * min
+    return min
 }
-
-
 
 /**
  * Средняя (3 балла)
@@ -188,14 +184,7 @@ fun lcm(m: Int, n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    val max = max(m, n)
-    val min = min(m, n)
-    for (a in 2..sqrt(min.toDouble()).toInt()) {
-        if (((m % a == 0) && (n % a == 0)) || (max % min == 0)) return false
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = algorithmOfEuclid(m, n) == 1
 
 /**
  * Средняя (3 балла)
