@@ -413,6 +413,18 @@ class Tests {
             )
         )
         assertEquals(
+            setOf("0"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 1),
+                    "2" to (1 to 1),
+                    "3" to (2 to 1)
+                ),
+                1
+            )
+        )
+        assertEquals(
             setOf("17", "16", "15", "14", "13", "12", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"),
             bagPacking(
                 mapOf(
@@ -460,6 +472,25 @@ class Tests {
             setOf("4", "3", "2", "1"),
             revertedSet(
                 listOf("1", "2", "3", "4")
+            )
+        )
+    }
+
+    @Test
+    @Tag("0")
+    fun differenceOfMaps() {
+        assertEquals(
+            mapOf("1" to (1 to 1)),
+            differenceOfMaps(
+                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1)),
+                mapOf("0" to (1 to 1), "2" to (1 to 1))
+            )
+        )
+        assertEquals(
+            emptyMap<String, Pair<Int, Int>>(),
+            differenceOfMaps(
+                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1)),
+                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1), "3" to (1 to 1))
             )
         )
     }

@@ -449,7 +449,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     for ((name, characteristic) in treasures) {
         if (characteristic.first <= capacity) {
             preResult += name
-            possibleVariants += name to characteristic  //сразу удаляет все "тяжелые" сокровища
+            possibleVariants += name to characteristic  //сразу удаляет все слишкмо "тяжелые" для рюкзака сокровища
         }
     }
     if (preResult.size == 1) return preResult
@@ -466,7 +466,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         intermediateResult = characteristic1.second
         for ((name2, characteristic2) in possibleVariants) {
             if ((name1 != name2)
-                && (weightOfProducts + characteristic2.first <= capacity)
+                && (weightOfProducts + characteristic2.first < capacity)
                 && (intermediateResult + characteristic2.second > resultPrice))
             {
                 preIntermediateMapOfProducts += name2 to characteristic2
@@ -475,19 +475,15 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 listOfNames += name2
             }
         }
-        if (intermediateResult > resultPrice) {
+        if (intermediateResult > resultPrice) { //массив с самым выгодной комбинацией сокровищ
             resultPrice = intermediateResult
             result = listOfNames
             intermediateMapOfProducts = preIntermediateMapOfProducts
         }
     }
-    if (intermediateMapOfProducts.size < treasures.size) {
-        val difference = emptyMap<String, Pair<Int, Int>>().toMutableMap()
-        for ((name, characteristic) in treasures) {
-            if (name !in intermediateMapOfProducts) difference += name to characteristic
-        }
-        for ((name2, characteristic2) in difference) {
-            for ((name1, characteristic1) in revertedMap(treasures)) {
+    if (intermediateMapOfProducts.size < treasures.size) {  //поиск тяжелых, но не таких ценных сокровищ, которые можно заменить
+        for ((name2, characteristic2) in differenceOfMaps(possibleVariants, intermediateMapOfProducts)) {
+            for ((name1, characteristic1) in revertedMap(possibleVariants)) {
                 if ((characteristic1.first > characteristic2.first)
                     && (characteristic1.second <= characteristic2.second)) {
                     result.add(name2)
@@ -501,11 +497,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 }
 
 
-fun revertedMap(treasures: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {    //создана, чтобы создать массив, обратный входному
+fun revertedMap(map: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {    //создана, чтобы создать массив, обратный входному
     val listOfNames = mutableListOf<String>()
     val listOfWeights = mutableListOf<Int>()
     val listOfPrices = mutableListOf<Int>()
-    for ((name, characteristic) in treasures) {
+    for ((name, characteristic) in map) {
         listOfNames.add(0, name)
         listOfWeights.add(0, characteristic.first)
         listOfPrices.add(0, characteristic.second)
@@ -523,6 +519,15 @@ fun revertedSet(set: List<String>): Set<String> {  //создана, чтобы 
     for (element in set) {
         result += set[count]
         count--
+    }
+    return result
+}
+
+fun differenceOfMaps(map1: Map<String, Pair<Int, Int>>, map2: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {
+    if (map1.size <= map2.size) return emptyMap()
+    val result = emptyMap<String, Pair<Int, Int>>().toMutableMap()
+    for ((name, characteristic) in map1) {
+        if (name !in map2) result += name to characteristic
     }
     return result
 }
