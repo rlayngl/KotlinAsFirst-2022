@@ -483,7 +483,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             intermediateMapOfProducts = preIntermediateMapOfProducts
         }
     }
-    if (intermediateMapOfProducts.size < treasures.size) {  //поиск тяжелых, но не таких ценных сокровищ, которые можно заменить
+    if (intermediateMapOfProducts.size < treasures.size) { //поиск тяжелых, но не таких ценных сокровищ, которые можно заменить
         for ((name2, characteristic2) in differenceOfMaps(possibleVariants, intermediateMapOfProducts)) {
             for ((name1, characteristic1) in revertedMap(intermediateMapOfProducts)) {
                 if ((characteristic2.second > characteristic1.second)
