@@ -410,7 +410,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    var result = -1 to -1
+    for ((index1, numberInList) in list.withIndex()) {
+        for ((index2, otherNumberInList) in list.withIndex()) {
+            if ((numberInList + otherNumberInList == number) && (index1 != index2)) result = index2 to index1
+        }
+    }
+    return result
+}
 
 /**
  * Очень сложная (8 баллов)
@@ -433,4 +441,39 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val possibleVariants = mutableMapOf<String, Pair<Int, Int>>()
+    var result = mutableSetOf<String>()
+    val preResult = mutableSetOf<String>()
+    for ((name, characteristic) in treasures) {
+        if (characteristic.first <= capacity) {
+            preResult += name
+            possibleVariants += name to characteristic  //сразу удаляет все "тяжелые" сокровища
+        }
+    }
+    if (preResult.size == 1) return preResult
+    var weightOfProducts: Int
+    var intermediateResult: Int
+    var resultPrice = 0
+    for ((name1, characteristic1) in possibleVariants) {  //сразу перебирает два массива, чтобы найти саммые ценные сокровища
+        val setOfNames = emptySet<String>().toMutableSet()
+        setOfNames += name1
+        weightOfProducts = characteristic1.first
+        intermediateResult = characteristic1.second
+        for ((name2, characteristic2) in possibleVariants) {
+            if ((name1 != name2)
+                && (weightOfProducts + characteristic2.first <= capacity)
+                && (intermediateResult + characteristic2.second > resultPrice))
+            {
+                weightOfProducts += characteristic2.first
+                intermediateResult += characteristic2.second
+                setOfNames += name2
+            }
+        }
+        if (intermediateResult > resultPrice) {
+            resultPrice = intermediateResult
+            result = setOfNames
+        }
+    }
+    return result
+}
