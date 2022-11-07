@@ -480,6 +480,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         break
     }
     if (intermediateMapOfProducts.size < treasures.size) { //поиск тяжелых, но не таких ценных сокровищ, которые можно заменить
+        val otherPreResult = intermediateMapOfProducts.toMutableMap()
         for ((name2, characteristic2)
         in differenceOfMaps(possibleVariants, intermediateMapOfProducts)){
             for ((name1, characteristic1) in revertedMap(intermediateMapOfProducts)) {
@@ -495,6 +496,21 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                         result.add(name2)
                         resultWeight += characteristic2.first
                         break
+                    }
+                }
+                var changingPrice = characteristic1.second
+                var changingWeight = characteristic1.first
+                otherPreResult += name1 to characteristic1
+                for ((name3, characteristic3) in revertedMap(intermediateMapOfProducts)) {
+                    if (name3 == name1) break
+                    changingWeight += characteristic3.first
+                    changingPrice += characteristic3.second
+                    otherPreResult += name3 to characteristic3
+                    if ((characteristic2.second > changingPrice) && (characteristic2.first <= changingWeight)) {
+                        for ((name, _) in otherPreResult) {
+                            result += name2
+                            result -= name
+                        }
                     }
                 }
             }

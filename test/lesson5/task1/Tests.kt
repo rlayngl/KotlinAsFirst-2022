@@ -397,6 +397,13 @@ class Tests {
             )
         )
         assertEquals(
+            setOf("3"),
+            bagPacking(
+                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1), "3" to (2 to 3)),
+                2
+            )
+        )
+        assertEquals(
             setOf("1", "0"),
             bagPacking(
                 mapOf("0" to (1 to 1), "1" to (1 to 1)),
