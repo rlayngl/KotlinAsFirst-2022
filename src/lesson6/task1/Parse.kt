@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 
 // Урок 6: разбор строк, исключения
@@ -77,24 +78,24 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+val CALENDAR = mapOf(
+    "января" to "1",
+    "февраля" to "2",
+    "марта" to "3",
+    "апреля" to "4",
+    "мая" to "5",
+    "июня" to "6",
+    "июля" to "7",
+    "августа" to "8",
+    "сентября" to "9",
+    "октября" to "10",
+    "ноября" to "11",
+    "декабря" to "12")
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
-    val calendar = mapOf(
-          "января" to "1",
-         "февраля" to "2",
-           "марта" to "3",
-          "апреля" to "4",
-             "мая" to "5",
-            "июня" to "6",
-            "июля" to "7",
-         "августа" to "8",
-        "сентября" to "9",
-         "октября" to "10",
-          "ноября" to "11",
-         "декабря" to "12")
-    if ((parts.size < 3) || (parts[1] !in calendar)) return ""
+    if ((parts.size < 3) || (parts[1] !in CALENDAR)) return ""
     val day = parts[0].toInt()
-    val month = (calendar[parts[1]])!!.toInt()
+    val month = (CALENDAR[parts[1]])!!.toInt()
     val year = parts[2].toInt()
     if (day > daysInMonth(month, year)) return ""
     return String.format("%02d.%02d.%d", day, month, year)
@@ -110,24 +111,24 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
+val REVERTED_CALENDAR = mapOf(
+    "01" to "января",
+    "02" to "февраля",
+    "03" to "марта",
+    "04" to "апреля",
+    "05" to "мая",
+    "06" to "июня",
+    "07" to "июля",
+    "08" to "августа",
+    "09" to "сентября",
+    "10" to "октября",
+    "11" to "ноября",
+    "12" to "декабря")
 fun dateDigitToStr(digital: String): String {
     val parts = digital.split(".")
-    val calendar = mapOf(
-        "01" to "января",
-        "02" to "февраля",
-        "03" to "марта",
-        "04" to "апреля",
-        "05" to "мая",
-        "06" to "июня",
-        "07" to "июля",
-        "08" to "августа",
-        "09" to "сентября",
-        "10" to "октября",
-        "11" to "ноября",
-        "12" to "декабря")
-    if ((parts.size != 3) || (parts[1] !in calendar)) return ""
+    if ((parts.size != 3) || (parts[1] !in REVERTED_CALENDAR)) return ""
     val day = parts[0].toInt()
-    val month = (calendar[parts[1]])!!
+    val month = (REVERTED_CALENDAR[parts[1]])!!
     val year = parts[2].toInt()
     if (day > daysInMonth(parts[1].toInt(), year)) return ""
     return String.format("%d %s %d", day, month, year)
@@ -147,24 +148,20 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String {
-    var result = ""
-    if (phone.startsWith("+"))  {
-        result += "+"
-    }
-    val parts = phone.removePrefix("+").split("-", " ", "(", ")")
-    if ("()" in phone) return ""
-    try {
-        for (part in parts) {
-            if (part == "") continue
-            if (part == "()") return ""
-            result += "${part.toInt()}"
+fun flattenPhoneNumber(phone: String): String = TODO() /**{
+    val result = mutableSetOf<String>()
+    if (("()" in phone ) ||("" in phone)) return ""
+    val parts = phone.split("-", " ", "(", ")")
+    for ((index, part) in parts.withIndex()) {
+        val check = Regex("""\d""")
+        if (part == "+" && index == 0 && parts[index + 1] ) {
+
+            result += "+"
         }
-    } catch (e: NumberFormatException) {
-        return ""
+        result += "${part.toInt()}"
     }
-    return result
-}
+    return result.joinToString(separator = "")
+}*/
 
 /**
  * Средняя (5 баллов)
@@ -178,15 +175,13 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     var result = -1
-    val parts = jumps.removePrefix("+").split("-", " ", "%")
-    try {
+    var preResult: Int
+    val parts = jumps.split("-", " ", "%")
         for (part in parts) {
             if (part == "") continue
-            if (part.toInt() > result) result = part.toInt()
+            preResult = part.toIntOrNull() ?: return -1
+            if (preResult > result) result = preResult
         }
-    } catch (e: NumberFormatException) {
-        return -1
-    }
     return result
 }
 
@@ -206,15 +201,11 @@ fun bestHighJump(jumps: String): Int {
     val parts = jumps.split(" ")
     var result = -1
     var intermediateResult = -1
-    try {
-        for (part in parts) {
-            if ("+" in part) result = intermediateResult
-            if (("-" in part) || ("%" in part) || ("+" in part)) {
-                continue
-            } else intermediateResult = part.toInt()
-        }
-    } catch (e: NumberFormatException) {
-        return -1
+    for (part in parts) {
+        if ("+" in part) result = intermediateResult
+        if (("-" in part) || ("%" in part) || ("+" in part)) {
+            continue
+        } else intermediateResult = part.toIntOrNull() ?: return -1
     }
     return result
 }
@@ -228,26 +219,29 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
-/**{
+fun plusMinus(expression: String): Int {
     var check = 0
     var result = 0
     var multiplier = 1
+    var number: Int
     val parts= expression.split(" ")
     for (part in parts) {
-        if (((part == "+") || (part == "-")) && (check == 1)) throw IllegalArgumentException()
-        if ((part == "+") || (part == "-")) check = 1
-        if (part == "+") multiplier = 1
-        if (part == "-") multiplier = -1
-        try {
-            if ((part != "+") && (part != "-")) {
-                result += part.toInt() * multiplier
-                check = 0
-            }
-        } catch (e: NumberFormatException) { throw IllegalArgumentException() }
+        if ((parts[0].toIntOrNull() == null) || ((part.length > 1) && (part.toInt() / 10 < 1))) {
+            //вторая проверка создана для того, чтобы избавиться от "+n" / "-n", но не задеть двузначные числа
+            throw IllegalArgumentException()
+        }
+        if ((part == "+" || part == "-") && check == 1) throw IllegalArgumentException()
+        if (part == "+" || part == "-") {
+            check = 1
+        } else {
+            check = 0
+            number = part.toIntOrNull() ?: throw IllegalArgumentException()
+            result += number * multiplier
+        }
+        multiplier = if (part == "-") -1 else 1
     }
     return result
-} */
+}
 
 /**
  * Сложная (6 баллов)
@@ -287,26 +281,16 @@ fun firstDuplicateIndex(str: String): Int {
 fun mostExpensive(description: String): String {
     if (description == "") return ""
     val pair = description.split("; ")
-    var count = 0
     var highestPrice = 0.0
     var productName = ""
-    var theMostExpensiveProduct = ""
     for (product in pair) {
         val nameAndPrice = product.split(" ")
-        for (characteristic in nameAndPrice) {
-            if (count % 2 == 0) {
-                productName = characteristic
-                count++
-                continue
-            }
-            if (characteristic.toDouble() >= highestPrice) {
-                theMostExpensiveProduct = productName
-                highestPrice = characteristic.toDouble()
-            }
-            count++
+        if (nameAndPrice[1].toDouble() >= highestPrice) {
+            highestPrice = nameAndPrice[1].toDouble()
+            productName = nameAndPrice[0]
         }
     }
-    return theMostExpensiveProduct
+    return productName
 }
 
 /**
@@ -320,47 +304,37 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
+val ROMAN_NUMBERS = mapOf(
+    "M" to 1000,
+    "CM" to 900,
+    "D" to 500,
+    "CD" to 400,
+    "C" to 100,
+    "XC" to 90,
+    "L" to 50,
+    "XL" to 40,
+    "X" to 10,
+    "IX" to 9,
+    "V" to 5,
+    "IV" to 4,
+    "I" to 1)
 fun fromRoman(roman: String): Int {
-    val revertedString = revertedString(roman) //функция ниже
-    val romanNumbers = mapOf(
-         "M" to 1000,
-        "CM" to 900,
-         "D" to 500,
-        "CD" to 400,
-         "C" to 100,
-        "XC" to 90,
-         "L" to 50,
-        "XL" to 40,
-         "X" to 10,
-        "IX" to 9,
-         "V" to 5,
-        "IV" to 4,
-         "I" to 1)
     if (roman == "") return -1
-    val parts = revertedString.split("")
-    val letters = parts.toMutableList()
+    val parts = roman.split("")
+    val letters = parts.reversed().toMutableList()
+    println(letters)
     letters -= parts[0] //поскольку при делении строки через "" в начале и в конце остаются лишние элементы
     letters -= parts[parts.size - 1]
     var memory = 0
     var result = 0
     for (part in letters) {
-        if (part !in romanNumbers) return -1
-        for ((key, value) in romanNumbers) {
-            if (part == key) {
-                if (value < memory) result -= value else result += value
-                memory = value
-                break
-            } else continue
+        if (part !in ROMAN_NUMBERS) return -1
+        if (ROMAN_NUMBERS[part]!! < memory) {
+            result -= ROMAN_NUMBERS[part]!!
+        } else {
+            result += ROMAN_NUMBERS[part]!!
+            memory = ROMAN_NUMBERS[part]!!
         }
-    }
-    return result
-}
-fun revertedString(str: String): String {
-    var count = str.length - 1
-    var result = ""
-    while (count != -1) {
-        result += str[count]
-        count--
     }
     return result
 }

@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson3.task1.isPrime
+import java.lang.StringBuilder
 import kotlin.math.sqrt
 
 
@@ -283,19 +284,14 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    var count = 9
     val convertNumbers = convert(n, base)
-    var result = ""
+    val result = mutableListOf<String>()
     for (element in convertNumbers.indices) {
-        if (convertNumbers[element] > 9) {
-            for (letter in 'a'..'z') {
-                count++
-                if (count == convertNumbers[element]) result += letter
-            }
-            count = 9
-        } else result += convertNumbers[element]
+        result += if (convertNumbers[element] > 9) {
+            ((convertNumbers[element] + 87).toChar()).toString()
+        } else (convertNumbers[element]).toString()
     }
-    return result
+    return result.joinToString(separator = "")
 }
 
 /**
@@ -351,23 +347,23 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
+val DICTIONARY = mapOf(
+    1000 to "M",
+    900 to "CM",
+    500 to "D",
+    400 to "CD",
+    100 to "C",
+    90 to "XC",
+    50 to "L",
+    40 to "XL",
+    10 to "X",
+    9 to "IX",
+    5 to "V",
+    4 to "IV",
+    1 to "I")
 fun roman(n: Int): String {
     var number = n
     var roman = ""
-    val DICTIONARY = mapOf(
-        1000 to "M",
-         900 to "CM",
-         500 to "D",
-         400 to "CD",
-         100 to "C",
-          90 to "XC",
-          50 to "L",
-          40 to "XL",
-          10 to "X",
-           9 to "IX",
-           5 to "V",
-           4 to "IV",
-           1 to "I")
     while (number != 0) {
         for ((key, value) in DICTIONARY) {
             if (number >= key) {

@@ -138,12 +138,6 @@ class Tests {
         assertEquals(-1, fromRoman(""))
     }
 
-    @Test
-    @Tag("0")
-    fun revertedString() {
-        assertEquals("fedcba", revertedString("abcdef"))
-    }
-
 
     @Test
     @Tag("7")
