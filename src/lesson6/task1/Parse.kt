@@ -148,20 +148,7 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO() /**{
-    val result = mutableSetOf<String>()
-    if (("()" in phone ) ||("" in phone)) return ""
-    val parts = phone.split("-", " ", "(", ")")
-    for ((index, part) in parts.withIndex()) {
-        val check = Regex("""\d""")
-        if (part == "+" && index == 0 && parts[index + 1] ) {
-
-            result += "+"
-        }
-        result += "${part.toInt()}"
-    }
-    return result.joinToString(separator = "")
-}*/
+fun flattenPhoneNumber(phone: String): String = TODO()
 
 /**
  * Средняя (5 баллов)
