@@ -329,15 +329,14 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
 fun hasAnagrams(words: List<String>): Boolean {
     if (words.size == 1) return false
     var wordByLetters: List<Char>
-    val memory = mutableListOf<String>()
-    for ((index, word) in words.withIndex()) {
-        if (word in memory) return true
-        if (word == "") memory += ""
-        if (index == 0) continue
-        wordByLetters = word.toList()
-        if (word == words[0]) return true
-        if (wordByLetters.sorted() == (words[0]).toList().sorted()) return true
+    val otherList = mutableListOf<List<Char>>()
+    val memory = mutableSetOf<List<Char>>()
+    for (word in words) {
+        wordByLetters = word.toList().sorted()
+        memory += wordByLetters
+        otherList += wordByLetters.toList().sorted()
     }
+    if (otherList.size != memory.size) return true
     return false
 }
 
@@ -397,15 +396,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var result = -1 to -1
     if (list.size == 1) return result
-    var memory = 0
-    for ((count, element) in list.withIndex()) {
-        if (((number - element) in list) && (number - element != element)) {
-            result = list.indexOf(number - element) to list.indexOf(element)
+    val listWithNoSameElement = mutableListOf<Int>()
+    listWithNoSameElement += list
+    for (element in list) {
+        listWithNoSameElement -= element
+        if ((number - element) in listWithNoSameElement) {
+            result = list.indexOf(element) to listWithNoSameElement.indexOf(number - element) + 1
+            break
         }
-        if (element == memory) result = list.indexOf(element) to count
-        if (number / 2 == element) {
-            memory = element
-        }
+        listWithNoSameElement.add(list.indexOf(element), element)
     }
     return result
 }

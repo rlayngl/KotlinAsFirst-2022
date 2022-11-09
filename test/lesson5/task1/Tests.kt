@@ -313,6 +313,7 @@ class Tests {
         assertFalse(hasAnagrams(listOf("a", "")))
         assertTrue(hasAnagrams(listOf("a", "", "", "", "")))
         assertTrue(hasAnagrams(listOf("a", "a")))
+        assertTrue(hasAnagrams(listOf("", "a", "a")))
     }
 
     @Test
@@ -366,6 +367,10 @@ class Tests {
         assertEquals(
             Pair(0, 1),
             findSumOfTwo(listOf(0, 0), 0)
+        )
+        assertEquals(
+            Pair(-1, -1),
+            findSumOfTwo(listOf(0, 0), 1)
         )
         assertEquals(
             Pair(0, 2),
