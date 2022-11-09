@@ -329,7 +329,10 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
 fun hasAnagrams(words: List<String>): Boolean {
     if (words.size == 1) return false
     var wordByLetters: List<Char>
+    val memory = mutableListOf<String>()
     for ((index, word) in words.withIndex()) {
+        if (word in memory) return true
+        if (word == "") memory += ""
         if (index == 0) continue
         wordByLetters = word.toList()
         if (word == words[0]) return true
@@ -393,6 +396,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var result = -1 to -1
+    if (list.size == 1) return result
     var memory = 0
     for ((count, element) in list.withIndex()) {
         if (((number - element) in list) && (number - element != element)) {
@@ -427,8 +431,8 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val possibleVariants = emptyMap<String, Pair<Int, Int>>().toMutableMap()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> =TODO()
+/**    val possibleVariants = emptyMap<String, Pair<Int, Int>>().toMutableMap()
     var weight = 0
     var price = 0
     for ((name, characteristic) in treasures) {
@@ -521,7 +525,12 @@ fun differenceOfMaps(map1: Map<String, Pair<Int, Int>>, map2: Map<String, Pair<I
     return result
 }
 
-/**
+
+
+
+
+
+
  * fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
 val possibleVariants = mutableMapOf<String, Pair<Int, Int>>()
 var result = mutableListOf<String>() //то же, что и result, только его элементы расположены в обратном порядке

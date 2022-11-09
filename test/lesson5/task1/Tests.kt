@@ -311,6 +311,7 @@ class Tests {
         assertFalse(hasAnagrams(listOf("")))
         assertTrue(hasAnagrams(listOf("", "")))
         assertFalse(hasAnagrams(listOf("a", "")))
+        assertTrue(hasAnagrams(listOf("a", "", "", "", "")))
         assertTrue(hasAnagrams(listOf("a", "a")))
     }
 
@@ -357,6 +358,10 @@ class Tests {
         assertEquals(
             Pair(0, 1),
             findSumOfTwo(listOf(2, 2, 0), 4)
+        )
+        assertEquals(
+            Pair(-1, -1),
+            findSumOfTwo(listOf(0), 0)
         )
         assertEquals(
             Pair(0, 1),
@@ -409,13 +414,6 @@ class Tests {
                 2
             )
         )
-        /**assertEquals(
-            setOf("3"),
-            bagPacking(
-                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1), "3" to (2 to 3)),
-                2
-            )
-        )*/
         assertEquals(
             setOf("1", "0"),
             bagPacking(
@@ -489,16 +487,16 @@ class Tests {
             setOf("15", "14", "13", "11", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"),
             bagPacking(
                 mapOf(
-                     "0" to (1 to 1),
-                     "1" to (1 to 1),
-                     "2" to (1 to 1),
-                     "3" to (77 to 1),
-                     "4" to (1 to 1),
-                     "5" to (493 to 1),
-                     "6" to (441 to 1),
-                     "7" to (1 to 1),
-                     "8" to (415 to 1),
-                     "9" to (1 to 1),
+                    "0" to (1 to 1),
+                    "1" to (1 to 1),
+                    "2" to (1 to 1),
+                    "3" to (77 to 1),
+                    "4" to (1 to 1),
+                    "5" to (493 to 1),
+                    "6" to (441 to 1),
+                    "7" to (1 to 1),
+                    "8" to (415 to 1),
+                    "9" to (1 to 1),
                     "10" to (193 to 1),
                     "11" to (182 to 1),
                     "12" to (498 to 1),
@@ -507,49 +505,6 @@ class Tests {
                     "15" to (122 to 118),
                 ),
                 2729
-            )
-        )
-    }
-
-
-    @Test
-    @Tag("0")
-    fun revertedMap() {
-        assertEquals(
-            mapOf("3" to (5 to 8), "2" to (9 to 1), "1" to (0 to 11), "0" to (2 to 3)),
-            revertedMap(
-                mapOf("0" to (2 to 3), "1" to (0 to 11), "2" to (9 to 1), "3" to (5 to 8))
-            )
-        )
-    }
-
-
-    @Test
-    @Tag("0")
-    fun revertedSet() {
-        assertEquals(
-            setOf("4", "3", "2", "1"),
-            revertedSet(
-                listOf("1", "2", "3", "4")
-            )
-        )
-    }
-
-    @Test
-    @Tag("0")
-    fun differenceOfMaps() {
-        assertEquals(
-            mapOf("1" to (1 to 1)),
-            differenceOfMaps(
-                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1)),
-                mapOf("0" to (1 to 1), "2" to (1 to 1))
-            )
-        )
-        assertEquals(
-            emptyMap<String, Pair<Int, Int>>(),
-            differenceOfMaps(
-                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1)),
-                mapOf("0" to (1 to 1), "1" to (1 to 1), "2" to (1 to 1), "3" to (1 to 1))
             )
         )
     }
