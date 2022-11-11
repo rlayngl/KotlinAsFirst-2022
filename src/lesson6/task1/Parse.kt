@@ -4,7 +4,6 @@ package lesson6.task1
 
 import lesson2.task2.daysInMonth
 import java.lang.IllegalArgumentException
-import java.lang.NumberFormatException
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -148,7 +147,12 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String =
+    if (phone.matches(Regex("(\\+\\d+)?[ \\-]*(\\(([ \\-]*\\d[ \\-]*)+\\))?(([ \\-]*\\d)+)"))) {
+        phone.split(" ", "-", "(", ")").joinToString("")
+    } else ""
+
+
 
 /**
  * Средняя (5 баллов)
@@ -164,11 +168,11 @@ fun bestLongJump(jumps: String): Int {
     var result = -1
     var preResult: Int
     val parts = jumps.split("-", " ", "%")
-        for (part in parts) {
-            if (part == "") continue
-            preResult = part.toIntOrNull() ?: return -1
-            if (preResult > result) result = preResult
-        }
+    for (part in parts) {
+        if (part == "") continue
+        preResult = part.toIntOrNull() ?: return -1
+        if (preResult > result) result = preResult
+    }
     return result
 }
 

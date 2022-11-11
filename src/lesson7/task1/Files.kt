@@ -63,7 +63,19 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty()) {
+            writer.write("")
+            writer.newLine()
+        } else if (line[0] == '_') {
+            continue
+        } else {
+            writer.write(line)
+            writer.newLine()
+        }
+    }
+    writer.close()
 }
 
 /**
@@ -75,7 +87,10 @@ fun deleteMarked(inputName: String, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> =TODO()
+/**{
+    for (word in File(inputName).readLines())
+}*/
 
 
 /**
@@ -91,9 +106,13 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  * Исключения (жюри, брошюра, парашют) в рамках данного задания обрабатывать не нужно
  *
  */
-fun sibilants(inputName: String, outputName: String) {
-    TODO()
-}
+fun sibilants(inputName: String, outputName: String): Nothing = TODO()
+/**{
+    val writer = File(outputName).bufferedWriter()
+    for (word in File(inputName).readLines()) {
+        if (line)
+    }
+}*/
 
 /**
  * Средняя (15 баллов)
