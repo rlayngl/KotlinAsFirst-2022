@@ -1,3 +1,5 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 package lesson7.task1
 
 import org.junit.jupiter.api.Assertions.assertEquals
