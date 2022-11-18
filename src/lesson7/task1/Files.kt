@@ -3,7 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import java.lang.StringBuilder
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -88,29 +87,22 @@ fun deleteMarked(inputName: String, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
-/**{
-    val result = emptyMap<String, Int>().toMutableMap()
-    val newFile = emptyList<String>().toMutableList()
-    for (line in File(inputName).readLines()) {
-        newFile += line.lowercase()
-    }
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val result = mutableMapOf<String, Int>()
     var count: Int
-    var mutableString: StringBuilder
-    for (letters in substrings) {
-        mutableString = "" as StringBuilder
-        result += letters to 0
+    for (string in substrings) {
         count = 0
-        for (line in newFile) {
-            mutableString.append(line.lowercase())
-            while (letters.lowercase() in mutableString) {
-                count++
-                mutableString.delete()
+        result += string to 0
+        for (line in File(inputName).readLines()) {
+            if (string.lowercase() !in line.lowercase()) continue
+            for (index in 0..(line.length - string.length)) {
+                if (line.substring(index, index + string.length).lowercase() == string.lowercase()) count++
             }
         }
+        result[string] = count
     }
     return result
-}*/
+}
 
 
 /**
@@ -126,12 +118,32 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  * Исключения (жюри, брошюра, парашют) в рамках данного задания обрабатывать не нужно
  *
  */
+
+val CORRECTION = mapOf(
+    "жы" to "жи", "жя" to "жа", "жю" to "жу", "чы" to "чи", "чя" to "ча", "чю" to "чу",
+    "шы" to "ши", "шя" to "ша", "шю" to "шу", "щы" to "щи", "щя" to "ща", "щю" to "щу",
+    "Жы" to "Жи", "Жя" to "Жа", "Жю" to "Жу", "Чы" to "Чи", "Чя" to "Ча", "Чю" to "Чу",
+    "Шы" to "Ши", "Шя" to "Ша", "Шю" to "Шу", "Щы" to "Щи", "Щя" to "Ща", "Щю" to "Щу",
+    "жЫ" to "жИ", "жЯ" to "жА", "жЮ" to "жУ", "чЫ" to "чИ", "чЯ" to "чА", "чЮ" to "чУ",
+    "шЫ" to "шИ", "шЯ" to "шА", "шЮ" to "шУ", "щЫ" to "щИ", "щЯ" to "щА", "щЮ" to "щУ",
+    "ЖЫ" to "ЖИ", "ЖЯ" to "ЖА", "ЖЮ" to "ЖУ", "ЧЫ" to "ЧИ", "ЧЯ" to "ЧА", "ЧЮ" to "ЧУ",
+    "ШЫ" to "ШИ", "ШЯ" to "ША", "ШЮ" to "ШУ", "ЩЫ" to "ЩИ", "ЩЯ" to "ЩА", "ЩЮ" to "ЩУ"
+)
 fun sibilants(inputName: String, outputName: String): Nothing = TODO()
 /**{
-val writer = File(outputName).bufferedWriter()
-for (word in File(inputName).readLines()) {
-if (line)
-}
+    val writer = File(outputName).bufferedWriter()
+    var corrector = mutableListOf<String>()
+    val newLine = StringBuilder()
+    for (line in File(inputName).readLines()) {
+        newLine.append(line)
+        for (index in 0..line.length - 2) {
+            corrector = emptyList<String>().toMutableList()
+            corrector += line[index].toString() + line[index + 1].toString()
+            if (corrector.joinToString("") in CORRECTION)
+                newLine.replac
+
+        }
+    }
 }*/
 
 /**

@@ -148,7 +148,7 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String =
-    if (phone.matches(Regex("(\\+\\d+)?[ \\-]*(\\(([ \\-]*\\d[ \\-]*)+\\))?(([ \\-]*\\d)+)"))) {
+    if (phone.matches(Regex("""(\+\d+)?[ \-]*(\(([ \-]*\d[ \-]*)+\))?(([ \-]*\d)+)"""))) {
         phone.split(" ", "-", "(", ")").joinToString("")
     } else ""
 
@@ -211,7 +211,7 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    var check = 0
+    var check = true
     var result = 0
     var multiplier = 1
     var number: Int
@@ -221,11 +221,11 @@ fun plusMinus(expression: String): Int {
             //вторая проверка создана для того, чтобы избавиться от "+n" / "-n", но не задеть двузначные числа
             throw IllegalArgumentException()
         }
-        if ((part == "+" || part == "-") && check == 1) throw IllegalArgumentException()
+        if ((part == "+" || part == "-") && !check) throw IllegalArgumentException()
         if (part == "+" || part == "-") {
-            check = 1
+            check = false
         } else {
-            check = 0
+            check = true
             number = part.toIntOrNull() ?: throw IllegalArgumentException()
             result += number * multiplier
         }
@@ -297,34 +297,28 @@ fun mostExpensive(description: String): String {
  */
 val ROMAN_NUMBERS = mapOf(
     "M" to 1000,
-    "CM" to 900,
     "D" to 500,
-    "CD" to 400,
     "C" to 100,
-    "XC" to 90,
     "L" to 50,
-    "XL" to 40,
     "X" to 10,
-    "IX" to 9,
     "V" to 5,
-    "IV" to 4,
     "I" to 1)
 fun fromRoman(roman: String): Int {
     if (roman == "") return -1
-    val parts = roman.split("")
-    val letters = parts.reversed().toMutableList()
-    println(letters)
-    letters -= parts[0] //поскольку при делении строки через "" в начале и в конце остаются лишние элементы
-    letters -= parts[parts.size - 1]
+    val letters = mutableListOf<Char>()
+    for (char in roman) {
+        letters += char
+    }
     var memory = 0
     var result = 0
-    for (part in letters) {
-        if (part !in ROMAN_NUMBERS) return -1
-        if (ROMAN_NUMBERS[part]!! < memory) {
-            result -= ROMAN_NUMBERS[part]!!
+    for (letter in letters.reversed()) {
+        val romanNumber = letter.toString()
+        if (romanNumber !in ROMAN_NUMBERS) return -1
+        if (ROMAN_NUMBERS[romanNumber]!! < memory) {
+            result -= ROMAN_NUMBERS[romanNumber]!!
         } else {
-            result += ROMAN_NUMBERS[part]!!
-            memory = ROMAN_NUMBERS[part]!!
+            result += ROMAN_NUMBERS[romanNumber]!!
+            memory = ROMAN_NUMBERS[romanNumber]!!
         }
     }
     return result

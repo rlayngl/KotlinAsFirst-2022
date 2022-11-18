@@ -288,7 +288,7 @@ fun convertToString(n: Int, base: Int): String {
     val result = mutableListOf<String>()
     for (element in convertNumbers.indices) {
         result += if (convertNumbers[element] > 9) {
-            ((convertNumbers[element] + 87).toChar()).toString()
+            (('a' + convertNumbers[element]) - 10).toString()
         } else (convertNumbers[element]).toString()
     }
     return result.joinToString(separator = "")
@@ -349,21 +349,21 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 val DICTIONARY = mapOf(
     1000 to "M",
-    900 to "CM",
-    500 to "D",
-    400 to "CD",
-    100 to "C",
-    90 to "XC",
-    50 to "L",
-    40 to "XL",
-    10 to "X",
-    9 to "IX",
-    5 to "V",
-    4 to "IV",
-    1 to "I")
+     900 to "CM",
+     500 to "D",
+     400 to "CD",
+     100 to "C",
+      90 to "XC",
+      50 to "L",
+      40 to "XL",
+      10 to "X",
+       9 to "IX",
+       5 to "V",
+       4 to "IV",
+       1 to "I")
 fun roman(n: Int): String {
     var number = n
-    var roman = ""
+    val roman = mutableListOf<String>()
     while (number != 0) {
         for ((key, value) in DICTIONARY) {
             if (number >= key) {
@@ -373,7 +373,7 @@ fun roman(n: Int): String {
             }
         }
     }
-    return roman
+    return roman.joinToString("")
 }
 
 /**

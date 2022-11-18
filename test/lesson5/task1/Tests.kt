@@ -295,7 +295,7 @@ class Tests {
         )
         assertEquals(
             mapOf(("a" to 4), ("b" to 2), ("c" to 3)),
-            extractRepeats(listOf("a", "b", "a", "a", "c", "c", "b", "l", "c", "a"))
+            extractRepeats(listOf("a", "a", "b", "b", "c", "c", "a", "l", "c", "a"))
         )
     }
 
@@ -387,6 +387,10 @@ class Tests {
         assertEquals(
             Pair(-1, -1),
             findSumOfTwo(listOf(1, 2, 3), 6)
+        )
+        assertEquals(
+            Pair(2, 3),
+            findSumOfTwo(listOf(1, 2, 2, 3), 5)
         )
         assertEquals(
             Pair(3, 5),

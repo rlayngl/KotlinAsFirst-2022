@@ -274,18 +274,9 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    if (word == "") return true
-    if (chars.isEmpty()) return false
-    val charsWithLowerCase = mutableSetOf<Char>()
-    for (char in chars) {
-        charsWithLowerCase += char.lowercaseChar()
-    }
-    val wordByLettersWithLowerCase = mutableSetOf<Char>()
-    for (letter in word) {
-        wordByLettersWithLowerCase += letter.lowercaseChar()
-    }
-    wordByLettersWithLowerCase -= charsWithLowerCase
-    return if (wordByLettersWithLowerCase.isEmpty()) true else false
+    val charsWithLowerCase = chars.map { it.lowercase() }.toMutableSet()
+    val wordByLettersWithLowerCase = word.map {it.lowercase()}.toMutableSet()
+    return (wordByLettersWithLowerCase.intersect(charsWithLowerCase) == wordByLettersWithLowerCase)
 }
 
 /**
@@ -302,14 +293,12 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
-    val setOfLetters = emptySet<String>().toMutableSet()
-    setOfLetters += list
+    val checkSet = mutableSetOf<String>()
     for (letter in list) {
-        when (letter) {
-            in setOfLetters -> { setOfLetters.remove(letter) }
-            !in result -> { result += letter to 2 }
-            else -> result[letter] = result[letter]!! + 1
-        }
+        if (letter in checkSet && letter in result) result[letter] = result[letter]!! + 1
+        if (letter in checkSet && letter !in result) result += letter to 2
+        checkSet += letter
+//переделал, но Set все равно оставил, в качестве проверки "попадалась ли эта буква раньше"
     }
     return result
 }
@@ -327,17 +316,9 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    if (words.size == 1) return false
-    var wordByLetters: List<Char>
-    val otherList = mutableListOf<List<Char>>()
     val memory = mutableSetOf<List<Char>>()
-    for (word in words) {
-        wordByLetters = word.toList().sorted()
-        memory += wordByLetters
-        otherList += wordByLetters.toList().sorted()
-    }
-    if (otherList.size != memory.size) return true
-    return false
+    for (word in words) memory += word.toSet().sorted()
+    return (words.size != memory.size)
 }
 
 /**
@@ -395,16 +376,21 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var result = -1 to -1
-    if (list.size == 1) return result
     val listWithNoSameElement = mutableListOf<Int>()
     listWithNoSameElement += list
+    val mapOfIndexes = mutableMapOf<Int, Int>()
+    for ((index, element) in list.withIndex()) {
+        if (element in mapOfIndexes && element.toDouble() == number.toDouble() / 2)
+            return mapOfIndexes[element]!! to index
+        mapOfIndexes += element to index
+    }
     for (element in list) {
         listWithNoSameElement -= element
         if ((number - element) in listWithNoSameElement) {
-            result = list.indexOf(element) to listWithNoSameElement.indexOf(number - element) + 1
+            result = mapOfIndexes[element]!! to mapOfIndexes[number - element]!!
             break
         }
-        listWithNoSameElement.add(list.indexOf(element), element)
+        listWithNoSameElement.add(mapOfIndexes[element]!!, element)
     }
     return result
 }
