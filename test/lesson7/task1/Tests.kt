@@ -363,6 +363,40 @@ Basic, Ruby, Swift.
         )
 
         test(
+            567,
+            1234,
+            """
+                 567
+             *  1234
+             -------
+                2268
+             +  1701
+             + 1134
+             +567
+             -------
+              699678
+             """
+        )
+
+        test(
+            3,
+            2678933,
+            """
+                    3
+             *2678933
+             --------
+                    9
+             +     9
+             +    27
+             +   24
+             +  21
+             + 18
+             +6
+             --------
+              8036799
+             """
+        )
+        test(
             12345,
             6,
             """
@@ -375,6 +409,27 @@ Basic, Ruby, Swift.
              """
         )
 
+    }
+
+    @Test
+    @Tag("0")
+    fun howMuchHyphens() {
+        assertEquals(("------"), howMuchHyphens(20, 571))
+    }
+
+    @Test
+    @Tag("0")
+    fun digitUnderNumber() {
+        assertEquals(9, digitUnderNumber(123456789, 1))
+        assertEquals(8, digitUnderNumber(123456789, 2))
+        assertEquals(7, digitUnderNumber(123456789, 3))
+        assertEquals(6, digitUnderNumber(123456789, 4))
+        assertEquals(5, digitUnderNumber(123456789, 5))
+        assertEquals(4, digitUnderNumber(123456789, 6))
+        assertEquals(3, digitUnderNumber(123456789, 7))
+        assertEquals(2, digitUnderNumber(123456789, 8))
+        assertEquals(1, digitUnderNumber(123456789, 9))
+        assertEquals(6, digitUnderNumber(456789851, 7))
     }
 
     @Test

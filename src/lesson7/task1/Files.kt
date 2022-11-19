@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -184,6 +185,7 @@ fun centerFile(inputName: String, outputName: String) {
                 }
             }
         }
+        lineWithSpaces.reverse()
         if (lineWithSpaces.length > theLongestLine) theLongestLine = lineWithSpaces.length
     }
     var count: Int
@@ -525,9 +527,78 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val line: StringBuilder = StringBuilder()
+    var count = howMuchHyphens(lhv, rhv).length - lhv.toString().length
+    while (count != 0) {
+        line.append(" ")
+        count--
+    }
+    line.append(lhv.toString())
+    line.append("\n")
+    count = digitNumber(lhv) - 1
+    line.append("*")
+    while (count != 0) {
+        line.append(" ")
+        count--
+    }
+    line.append(rhv.toString())
+    line.append("\n")
+    line.append(howMuchHyphens(lhv, rhv))
+    line.append("\n")
+    count = howMuchHyphens(lhv, rhv).length - (lhv * (rhv % 10)).toString().length
+    while (count != 0) {
+        line.append(" ")
+        count--
+    }
+    line.append((lhv * (rhv % 10)).toString())
+    line.append("\n")
+    var plusCount = digitNumber(rhv) - 1
+    var digit = 2
+    var extraCount = 2
+    while (plusCount != 0) {
+        count = digitNumber(rhv) - extraCount
+        line.append("+")
+        while (count != 0) {
+            line.append(" ")
+            count--
+        }
+        line.append((lhv * digitUnderNumber(rhv, extraCount)).toString())
+        line.append("\n")
+        plusCount--
+        extraCount++
+        digit++
+    }
+    line.append(howMuchHyphens(lhv, rhv))
+    line.append("\n")
+    line.append(" ")
+    line.append((lhv * rhv).toString())
+    writer.write(line.toString())
+    writer.close()
 }
 
+
+fun howMuchHyphens(lhv: Int, rhv: Int): String {   // находит необходимое число дефисов в printMultiplicationProcess
+    var count = digitNumber(lhv * rhv) + 1
+    val hyphensLine: StringBuilder = StringBuilder()
+    while (count != 0) {
+        hyphensLine.append("-")
+        count--
+    }
+    return hyphensLine.toString()
+}
+
+fun digitUnderNumber(rhv: Int, n: Int): Int { // находит n-ный символ в числе
+    var number = rhv
+    var result = 0
+    var count = n
+    while (count != 0) {
+        result = number % 10
+        number /= 10
+        count--
+    }
+    return result
+}
 
 /**
  * Сложная (25 баллов)
