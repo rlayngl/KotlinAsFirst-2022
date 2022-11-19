@@ -169,8 +169,22 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var theLongestLine = 0
+    var lineWithSpaces: StringBuilder
     for (line in File(inputName).readLines()) {
-        if (line.length > theLongestLine) theLongestLine = line.length
+        lineWithSpaces = StringBuilder()
+        lineWithSpaces.append(line)
+        if (lineWithSpaces.isNotEmpty()) {
+            while (lineWithSpaces[0].toString() == " ") {
+                lineWithSpaces.delete(0, 1)
+            }
+            if (lineWithSpaces.isNotEmpty()) {
+                while (lineWithSpaces.reverse()[0].toString() == " ") {
+                    lineWithSpaces.delete(0, 1)
+                    lineWithSpaces.reverse()
+                }
+            }
+        }
+        if (lineWithSpaces.length > theLongestLine) theLongestLine = lineWithSpaces.length
     }
     var count: Int
     var centeredLine: StringBuilder
