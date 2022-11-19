@@ -180,12 +180,13 @@ fun centerFile(inputName: String, outputName: String) {
         centeredLine.append(line)
         listOfSpaces = emptyList<String>().toMutableList()
         if (centeredLine.isNotEmpty()) {
-            while (centeredLine[0] == ' ') {
+            while (centeredLine[0].toString() == " ") {
                 centeredLine.delete(0, 1)
             }
             if (centeredLine.isNotEmpty()) {
-                while (centeredLine.reverse()[0] == ' ') {
-                    centeredLine.reverse().delete(0, 1)
+                while (centeredLine.reverse()[0].toString() == " ") {
+                    centeredLine.delete(0, 1)
+                    centeredLine.reverse()
                 }
             }
         }
