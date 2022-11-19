@@ -129,22 +129,25 @@ val CORRECTION = mapOf(
     "ЖЫ" to "ЖИ", "ЖЯ" to "ЖА", "ЖЮ" to "ЖУ", "ЧЫ" to "ЧИ", "ЧЯ" to "ЧА", "ЧЮ" to "ЧУ",
     "ШЫ" to "ШИ", "ШЯ" to "ША", "ШЮ" to "ШУ", "ЩЫ" to "ЩИ", "ЩЯ" to "ЩА", "ЩЮ" to "ЩУ"
 )
-fun sibilants(inputName: String, outputName: String): Nothing = TODO()
-/**{
+fun sibilants(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    var corrector = mutableListOf<String>()
-    val newLine = StringBuilder()
+    var corrector: MutableList<String>
+    var correctedLine: StringBuilder
     for (line in File(inputName).readLines()) {
-        newLine.append(line)
+        correctedLine = StringBuilder()
+        correctedLine.append(line)
         for (index in 0..line.length - 2) {
             corrector = emptyList<String>().toMutableList()
             corrector += line[index].toString() + line[index + 1].toString()
-            if (corrector.joinToString("") in CORRECTION)
-                newLine.replac
-
+            if (corrector.joinToString("") in CORRECTION) {
+                correctedLine.replace(index, index + 2, CORRECTION[corrector.joinToString("")])
+            }
         }
+        writer.write(correctedLine.toString())
+        writer.newLine()
     }
-}*/
+    writer.close()
+}
 
 /**
  * Средняя (15 баллов)
@@ -164,7 +167,35 @@ fun sibilants(inputName: String, outputName: String): Nothing = TODO()
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var theLongestLine = 0
+    for (line in File(inputName).readLines()) {
+        if (line.length > theLongestLine) theLongestLine = line.length
+    }
+    var count: Int
+    var spaceCounter: Int
+    var centeredLine: StringBuilder
+    var listOfSpaces: MutableList<String>
+    for (line in File(inputName).readLines()) {
+        centeredLine = StringBuilder()
+        centeredLine.append(line)
+        listOfSpaces = emptyList<String>().toMutableList()
+        spaceCounter = 0
+        if (centeredLine.length > 1) {
+            while (centeredLine[spaceCounter] == ' ') {
+                spaceCounter++
+            }
+        }
+        count = (theLongestLine - line.length - spaceCounter) / 2
+        while (count != 0) {
+            listOfSpaces.add(" ")
+            count--
+        }
+        (centeredLine.reverse()).append(listOfSpaces.joinToString(""))
+        writer.write((centeredLine.reverse()).toString())
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
