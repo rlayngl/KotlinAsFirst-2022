@@ -557,7 +557,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     var digit = 2
     var extraCount = 2
     while (plusCount != 0) {
-        count = digitNumber(rhv) - extraCount
+        count = howMuchHyphens(lhv, rhv).length - digitNumber((lhv * digitUnderNumber(rhv, extraCount))) - extraCount
         line.append("+")
         while (count != 0) {
             line.append(" ")
