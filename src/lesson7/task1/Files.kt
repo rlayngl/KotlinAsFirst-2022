@@ -176,6 +176,7 @@ fun centerFile(inputName: String, outputName: String) {
     var spaceCounter: Int
     var centeredLine: StringBuilder
     var listOfSpaces: MutableList<String>
+    var thisLineLength: Int
     for (line in File(inputName).readLines()) {
         centeredLine = StringBuilder()
         centeredLine.append(line)
@@ -186,7 +187,9 @@ fun centerFile(inputName: String, outputName: String) {
                 spaceCounter++
             }
         }
-        count = (theLongestLine - line.length - spaceCounter) / 2
+        thisLineLength = line.length - spaceCounter //длина строки без пробелов
+        count = (theLongestLine - thisLineLength) / 2 - spaceCounter //необходимое количество дополнительных пробелов
+        println(count)
         while (count != 0) {
             listOfSpaces.add(" ")
             count--
