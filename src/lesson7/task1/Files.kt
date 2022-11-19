@@ -179,12 +179,14 @@ fun centerFile(inputName: String, outputName: String) {
         centeredLine = StringBuilder()
         centeredLine.append(line)
         listOfSpaces = emptyList<String>().toMutableList()
-        if (centeredLine.length > 1) {
+        if (centeredLine.isNotEmpty()) {
             while (centeredLine[0] == ' ') {
                 centeredLine.delete(0, 1)
             }
-            while (centeredLine.reverse()[0] == ' ') {
-                centeredLine.reverse().delete(0, 1)
+            if (centeredLine.isNotEmpty()) {
+                while (centeredLine.reverse()[0] == ' ') {
+                    centeredLine.reverse().delete(0, 1)
+                }
             }
         }
         count = (theLongestLine - centeredLine.length) / 2
