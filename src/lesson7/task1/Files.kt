@@ -173,31 +173,26 @@ fun centerFile(inputName: String, outputName: String) {
         if (line.length > theLongestLine) theLongestLine = line.length
     }
     var count: Int
-    var spaceCounter: Int
     var centeredLine: StringBuilder
     var listOfSpaces: MutableList<String>
-    var thisLineLength: Int
-    var centeredLineLength: Int
     for (line in File(inputName).readLines()) {
         centeredLine = StringBuilder()
         centeredLine.append(line)
         listOfSpaces = emptyList<String>().toMutableList()
-        spaceCounter = 0
-        centeredLineLength = centeredLine.length
         if (centeredLine.length > 1) {
-            while (centeredLine[spaceCounter] == ' ') {
-                spaceCounter++
+            while (centeredLine[0] == ' ') {
+                centeredLine.delete(0, 1)
             }
-            while(centeredLine[centeredLineLength - 1] == ' ') {
-                centeredLineLength--
+            while (centeredLine.reverse()[0] == ' ') {
+                centeredLine.reverse().delete(0, 1)
             }
         }
-        thisLineLength = centeredLineLength - spaceCounter //длина строки без передних и задних пробелов
-        count = (theLongestLine - thisLineLength) / 2 - spaceCounter //необходимое количество дополнительных пробелов
+        count = (theLongestLine - centeredLine.length) / 2
         while (count != 0) {
             listOfSpaces.add(" ")
             count--
         }
+        centeredLine.reverse()
         (centeredLine.reverse()).append(listOfSpaces.joinToString(""))
         writer.write((centeredLine.reverse()).toString())
         writer.newLine()
