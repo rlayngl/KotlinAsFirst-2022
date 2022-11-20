@@ -528,52 +528,54 @@ fun markdownToHtml(inputName: String, outputName: String) {
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    val line: StringBuilder = StringBuilder()
-    var count = howMuchHyphens(lhv, rhv).length - lhv.toString().length
+    val lines: StringBuilder = StringBuilder()
+    val howMuchHyphens = howMuchHyphens(lhv, rhv)
+    val digitNumberRHV = digitNumber(rhv)
+    var count = howMuchHyphens.length - "$lhv".length
     while (count != 0) {
-        line.append(" ")
+        lines.append(" ")
         count--
     }
-    line.append(lhv.toString())
-    line.append("\n")
-    count = howMuchHyphens(lhv, rhv).length - digitNumber(rhv) - 1
-    line.append("*")
+    lines.append("$lhv")
+    lines.append("\n")
+    count = howMuchHyphens.length - digitNumberRHV - 1
+    lines.append("*")
     while (count != 0) {
-        line.append(" ")
+        lines.append(" ")
         count--
     }
-    line.append(rhv.toString())
-    line.append("\n")
-    line.append(howMuchHyphens(lhv, rhv))
-    line.append("\n")
-    count = howMuchHyphens(lhv, rhv).length - (lhv * (rhv % 10)).toString().length
+    lines.append("$rhv")
+    lines.append("\n")
+    lines.append(howMuchHyphens)
+    lines.append("\n")
+    count = howMuchHyphens.length - "${lhv * (rhv % 10)}".length
     while (count != 0) {
-        line.append(" ")
+        lines.append(" ")
         count--
     }
-    line.append((lhv * (rhv % 10)).toString())
-    line.append("\n")
-    var plusCount = digitNumber(rhv) - 1
+    lines.append("${lhv * (rhv % 10)}")
+    lines.append("\n")
+    var plusCount = digitNumberRHV - 1
     var digit = 2
     var extraCount = 2
     while (plusCount != 0) {
-        count = howMuchHyphens(lhv, rhv).length - digitNumber((lhv * digitUnderNumber(rhv, extraCount))) - extraCount
-        line.append("+")
+        count = howMuchHyphens.length - digitNumber((lhv * digitUnderNumber(rhv, extraCount))) - extraCount
+        lines.append("+")
         while (count != 0) {
-            line.append(" ")
+            lines.append(" ")
             count--
         }
-        line.append((lhv * digitUnderNumber(rhv, extraCount)).toString())
-        line.append("\n")
+        lines.append("${lhv * digitUnderNumber(rhv, extraCount)}")
+        lines.append("\n")
         plusCount--
         extraCount++
         digit++
     }
-    line.append(howMuchHyphens(lhv, rhv))
-    line.append("\n")
-    line.append(" ")
-    line.append((lhv * rhv).toString())
-    writer.write(line.toString())
+    lines.append(howMuchHyphens)
+    lines.append("\n")
+    lines.append(" ")
+    lines.append("${lhv * rhv}")
+    writer.write(lines.toString())
     writer.close()
 }
 
@@ -621,6 +623,106 @@ fun digitUnderNumber(rhv: Int, n: Int): Int { // находит n-ный сим�
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val lines: StringBuilder = StringBuilder()
+    val theFirstSubtraction = rhv * digitUnderNumber((lhv / rhv), digitNumber(lhv / rhv)) //первое число второй строчки (вычитаемое)
+    val digitsOfFirstSubtraction = digitNumber(theFirstSubtraction)
+    lines.append(" $lhv | $rhv")
+    lines.append("\n")
+    lines.append("-${theFirstSubtraction}")
+    var count = digitNumber(lhv) - digitsOfFirstSubtraction + 3  //число пробелов во второй строчке
+    while (count != 0) {
+        lines.append(" ")
+        count--
+    }
+    lines.append("${lhv / rhv}")
+    lines.append("\n")
+    count = digitsOfFirstSubtraction + 1  //число дефисов в третьей строчке
+    while (count != 0) {
+        lines.append("-")
+        count--
+    }
+    lines.append("\n")
+    var countOfSpaces: Int
+    var countOfRanks = digitNumber(theFirstSubtraction) + 1 //число разрядов. Далее используется для "сноса" очередной цифры из lhv
+    var nextStageNumber: Int //число будущей строки (остаток от разности)
+    var countOfHyphens: Int //число дефисов
+    var memory = theFirstSubtraction
+    var stages = digitNumber(lhv / rhv) - 1 //максимальное количество сносов цифры из lhv
+    var extraSpace = 0 //дополнительный пробел, который появляется при каждом новом сносе цифры из lhv
+    var lastSpaces = digitNumber(theFirstSubtraction)
+    //пробелы, добавляемые в конце. Если lhv сразу делится на rhv, число пробелов будет равно количеству символов theFirstSubtraction
+    var memoryOfSpaces: Int //память числа пробелов в зависимости от ситуации
+    var digitsOfNextStageNumber: Int
+    var digitsOfCurrentRemainder: Int
+    while (stages != 0) {
+        lastSpaces = 0
+        nextStageNumber = someFirstDigits(lhv, countOfRanks) - memory * 10
+        digitsOfNextStageNumber = digitNumber(nextStageNumber)
+        digitsOfCurrentRemainder = digitNumber(nextStageNumber / rhv * rhv) //количество символов в текущем остатке
+        memoryOfSpaces = if
+                (nextStageNumber % rhv != 0) digitsOfFirstSubtraction + 2 - digitsOfNextStageNumber
+        else
+            digitsOfFirstSubtraction + 1 - digitsOfNextStageNumber
+        memory = memory * 10 + nextStageNumber / rhv * rhv
+        countOfSpaces = memoryOfSpaces + extraSpace
+        while (countOfSpaces != 0) {
+            lines.append(" ")
+            countOfSpaces--
+        }
+        if (nextStageNumber % rhv != 0) {
+            lines.append("$nextStageNumber")
+        } else {
+            extraSpace++
+            lines.append("0$nextStageNumber")
+        }
+        lines.append("\n")
+        memoryOfSpaces = if (nextStageNumber % rhv != 0) digitsOfFirstSubtraction + 1 - digitsOfCurrentRemainder
+        else digitsOfFirstSubtraction - digitsOfCurrentRemainder
+        countOfSpaces = memoryOfSpaces + extraSpace
+        while (countOfSpaces != 0) {
+            lines.append(" ")
+            countOfSpaces--
+        }
+        lines.append("-${nextStageNumber / rhv * rhv}")
+        lines.append("\n")
+        countOfSpaces = memoryOfSpaces + extraSpace
+        lastSpaces += countOfSpaces
+        while (countOfSpaces != 0) {
+            lines.append(" ")
+            countOfSpaces--
+        }
+        countOfHyphens = digitsOfCurrentRemainder + 1
+        lastSpaces += countOfHyphens
+        while (countOfHyphens != 0) {
+            lines.append("-")
+            countOfHyphens--
+        }
+        lines.append("\n")
+        countOfRanks++
+        stages--
+        extraSpace++
+        if (nextStageNumber % rhv == 0) extraSpace--
+        lastSpaces -= digitNumber(lhv % rhv)
+    }
+    while (lastSpaces != 0) {
+        lines.append(" ")
+        lastSpaces--
+    }
+    lines.append("${lhv % rhv}")
+    writer.write(lines.toString())
+    writer.close()
+}
+
+
+fun someFirstDigits(number: Int, n: Int): Int { //первые n цифры числа number
+    val length = "$number".length
+    var firstDigits = number
+    var count = length - n
+    while (count != 0) {
+        firstDigits /= 10
+        count--
+    }
+    return firstDigits
 }
 
