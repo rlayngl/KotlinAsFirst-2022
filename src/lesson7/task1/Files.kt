@@ -660,7 +660,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         nextStageNumber = someFirstDigits(lhv, countOfRanks) - memory * 10
         digitsOfNextStageNumber = digitNumber(nextStageNumber)
         digitsOfCurrentRemainder = digitNumber(nextStageNumber / rhv * rhv) //количество символов в текущем остатке
-        memoryOfSpaces = if (nextStageNumber % rhv == 0 && nextStageNumber < 10)
+        memoryOfSpaces = if (nextStageNumber % rhv == 0)
             digitsOfFirstSubtraction + 1 - digitsOfNextStageNumber
         else
             digitsOfFirstSubtraction + 2 - digitsOfNextStageNumber
@@ -670,12 +670,13 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             lines.append(" ")
             countOfSpaces--
         }
-        if (nextStageNumber % rhv == 0  && nextStageNumber < 10) {
+        if (nextStageNumber % rhv == 0 && nextStageNumber < 10) {
             extraSpace++
             lines.append("0$nextStageNumber")
-        } else {
-            lines.append("$nextStageNumber")
-        }
+        } else if (nextStageNumber % rhv == 0) {
+            extraSpace++
+            lines.append(" $nextStageNumber")
+        } else lines.append("$nextStageNumber")
         lines.append("\n")
         memoryOfSpaces = if (nextStageNumber % rhv != 0) digitsOfFirstSubtraction + 1 - digitsOfCurrentRemainder
         else digitsOfFirstSubtraction - digitsOfCurrentRemainder
