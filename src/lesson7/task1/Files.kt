@@ -536,7 +536,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     }
     line.append(lhv.toString())
     line.append("\n")
-    count = digitNumber(lhv) - 1
+    count = howMuchHyphens(lhv, rhv).length - digitNumber(rhv) - 1
     line.append("*")
     while (count != 0) {
         line.append(" ")
