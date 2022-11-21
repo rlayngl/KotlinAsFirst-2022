@@ -627,12 +627,18 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val lines: StringBuilder = StringBuilder()
     val theFirstSubtraction = rhv * digitUnderNumber((lhv / rhv), digitNumber(lhv / rhv)) //первое число второй строчки (вычитаемое)
     val digitsOfFirstSubtraction = digitNumber(theFirstSubtraction)
-    if (digitNumber(lhv / rhv) == 1 && lhv / rhv != 0 && digitNumber(lhv) > digitNumber(lhv / rhv * rhv))
-        lines.append("$lhv | $rhv") else lines.append(" $lhv | $rhv")
+    var lastSpaces = 0
+    //пробелы, добавляемые в конце. Если lhv сразу делится на rhv, число пробелов будет равно количеству символов theFirstSubtraction
+    if (lhv / rhv != 0 && digitNumber(lhv) > digitNumber(lhv / rhv * rhv))
+        lines.append("$lhv | $rhv") else {
+            lines.append(" $lhv | $rhv")
+            lastSpaces = 1
+    }
+    lastSpaces += digitNumber(lhv) - digitNumber((lhv % rhv))
     lines.append("\n")
     lines.append("-${theFirstSubtraction}")
     var count =
-        if (digitNumber(lhv / rhv) == 1 && lhv / rhv != 0  && digitNumber(lhv) > digitNumber(lhv / rhv * rhv))
+        if (lhv / rhv != 0  && digitNumber(lhv) > digitNumber(lhv / rhv * rhv))
         digitNumber(lhv) - digitsOfFirstSubtraction + 2
     else digitNumber(lhv) - digitsOfFirstSubtraction + 3 //число пробелов во второй строчке
     while (count != 0) {
@@ -654,13 +660,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var memory = theFirstSubtraction
     var stages = digitNumber(lhv / rhv) - 1 //максимальное количество сносов цифры из lhv
     var extraSpace = 0 //дополнительный пробел, который появляется при каждом новом сносе цифры из lhv
-    var lastSpaces = digitNumber(theFirstSubtraction)
-    //пробелы, добавляемые в конце. Если lhv сразу делится на rhv, число пробелов будет равно количеству символов theFirstSubtraction
     var memoryOfSpaces: Int //память числа пробелов в зависимости от ситуации
     var digitsOfNextStageNumber: Int
     var digitsOfCurrentRemainder: Int
     while (stages != 0) {
-        lastSpaces = 0
         nextStageNumber = someFirstDigits(lhv, countOfRanks) - memory * 10
         digitsOfNextStageNumber = digitNumber(nextStageNumber)
         digitsOfCurrentRemainder = digitNumber(nextStageNumber / rhv * rhv) //количество символов в текущем остатке
@@ -692,13 +695,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         lines.append("-${nextStageNumber / rhv * rhv}")
         lines.append("\n")
         countOfSpaces = memoryOfSpaces + extraSpace
-        lastSpaces += countOfSpaces
         while (countOfSpaces != 0) {
             lines.append(" ")
             countOfSpaces--
         }
         countOfHyphens = digitsOfCurrentRemainder + 1
-        lastSpaces += countOfHyphens
         while (countOfHyphens != 0) {
             lines.append("-")
             countOfHyphens--
@@ -708,7 +709,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         stages--
         extraSpace++
         if (nextStageNumber % rhv == 0 || nextStageNumber < 10) extraSpace--
-        lastSpaces -= digitNumber(lhv % rhv)
     }
     while (lastSpaces != 0) {
         lines.append(" ")
