@@ -627,10 +627,14 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val lines: StringBuilder = StringBuilder()
     val theFirstSubtraction = rhv * digitUnderNumber((lhv / rhv), digitNumber(lhv / rhv)) //первое число второй строчки (вычитаемое)
     val digitsOfFirstSubtraction = digitNumber(theFirstSubtraction)
-    lines.append(" $lhv | $rhv")
+    if (digitNumber(lhv / rhv) == 1 && lhv / rhv != 0 && digitNumber(lhv) > digitNumber(lhv / rhv * rhv))
+        lines.append("$lhv | $rhv") else lines.append(" $lhv | $rhv")
     lines.append("\n")
     lines.append("-${theFirstSubtraction}")
-    var count = digitNumber(lhv) - digitsOfFirstSubtraction + 3  //число пробелов во второй строчке
+    var count =
+        if (digitNumber(lhv / rhv) == 1 && lhv / rhv != 0  && digitNumber(lhv) > digitNumber(lhv / rhv * rhv))
+        digitNumber(lhv) - digitsOfFirstSubtraction + 2
+    else digitNumber(lhv) - digitsOfFirstSubtraction + 3 //число пробелов во второй строчке
     while (count != 0) {
         lines.append(" ")
         count--
