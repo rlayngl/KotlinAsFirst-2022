@@ -627,6 +627,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val lines: StringBuilder = StringBuilder()
     val listOfNumbers = lhv.toString().toList()
     val answer = lhv / rhv
+    val digitsRemainder = digitNumber(lhv % rhv)
     val digitsLHV = digitNumber(lhv)
     val digitsRHV = digitNumber(rhv)
     var firstDividend = 0
@@ -704,7 +705,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             lines.append(" ")
             memoryOfSpaces--
         }
-        memoryOfSpaces = extraSpace
         if (count + 1 <= listOfNumbers.size) {
             lines.append("$memoryNumber")
             lines.append("${listOfNumbers[count]}")
@@ -713,7 +713,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         lines.append("\n")
         memoryNumber = (memoryNumber * 10 + listOfNumbers[count].digitToInt())
         digitMemoryNumber += digitNumber(memoryNumber)
-        if (digitMemoryNextNumber == digitMemoryNumber) memoryOfSpaces -= 1
+        memoryOfSpaces = if (digitMemoryNumber != digitMemoryNextNumber)
+            extraSpace + digitMemoryNumber - digitMemoryNextNumber - 1
+        else extraSpace - 1
         while (memoryOfSpaces != 0) {
             lines.append(" ")
             memoryOfSpaces--
@@ -729,11 +731,13 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         memoryOfSpaces = extraSpace
         if (digitMemoryNextNumber == digitMemoryNumber) memoryOfSpaces -= 1
         countOfHyphens = digitMemoryNextNumber + 1
+        if (stages == 1 && countOfHyphens < digitsRemainder) countOfHyphens = digitsRemainder
         while (countOfHyphens != 0) {
             lines.append("-")
             countOfHyphens--
         }
         countOfHyphens = digitMemoryNextNumber + 1
+        if (stages == 1 && countOfHyphens < digitsRemainder) countOfHyphens = digitsRemainder
         lines.append("\n")
         stages--
         count++
@@ -741,7 +745,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         extraSpace = extraSpace + 1 + digitsRHV - digitNumber(memoryNumber - memoryNextNumber)
         memoryNumber %= rhv
     }
-    memoryOfSpaces = memoryOfSpaces + countOfHyphens - digitNumber(lhv % rhv)
+    memoryOfSpaces = memoryOfSpaces + countOfHyphens - digitsRemainder
     if (memoryOfSpaces >= 0) {
         while (memoryOfSpaces != 0) {
             lines.append(" ")
