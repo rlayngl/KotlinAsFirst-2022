@@ -178,11 +178,9 @@ fun centerFile(inputName: String, outputName: String) {
             while (lineWithSpaces[0].toString() == " ") {
                 lineWithSpaces.delete(0, 1)
             }
-            if (lineWithSpaces.isNotEmpty()) {
-                while (lineWithSpaces.reverse()[0].toString() == " ") {
-                    lineWithSpaces.delete(0, 1)
-                    lineWithSpaces.reverse()
-                }
+            while (lineWithSpaces.reverse()[0].toString() == " ") {
+                lineWithSpaces.delete(0, 1)
+                lineWithSpaces.reverse()
             }
         }
         lineWithSpaces.reverse()
@@ -199,11 +197,9 @@ fun centerFile(inputName: String, outputName: String) {
             while (centeredLine[0].toString() == " ") {
                 centeredLine.delete(0, 1)
             }
-            if (centeredLine.isNotEmpty()) {
-                while (centeredLine.reverse()[0].toString() == " ") {
-                    centeredLine.delete(0, 1)
-                    centeredLine.reverse()
-                }
+            while (centeredLine.reverse()[0].toString() == " ") {
+                centeredLine.delete(0, 1)
+                centeredLine.reverse()
             }
         }
         count = (theLongestLine - centeredLine.length) / 2
@@ -247,7 +243,74 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var theLargestLine = 0
+    val listOfLines = mutableListOf<String>()
+    val lineWithNoSpaces = StringBuilder()
+    var memory: Char
+    var lineLength: Int
+    for (line in File(inputName).readLines()) { // после этого цикла получаем список из строк, в каждой из которых нет лишних пробелов
+        lineWithNoSpaces.append(line)
+        lineLength = line.length
+        if (lineWithNoSpaces.isNotEmpty()) {
+            while (lineWithNoSpaces[0].toString() == " ") {
+                lineWithNoSpaces.delete(0, 1)
+                lineLength--
+            }
+            while (lineWithNoSpaces.reverse()[0].toString() == " ") {
+                lineWithNoSpaces.delete(0, 1)
+                lineLength--
+            }
+            lineWithNoSpaces.reverse()
+            memory = line[0]
+            for ((index, char) in lineWithNoSpaces.withIndex()) {
+                if (char == memory && index != 0 && char == ' ') {
+                    lineWithNoSpaces.delete(index, index + 1)
+                    lineLength--
+                }
+                memory = char
+            }
+        }
+        if (lineLength > theLargestLine) theLargestLine = lineLength
+        listOfLines += lineWithNoSpaces.toString()
+        lineWithNoSpaces.clear()
+    }
+    var listOfWords: MutableList<String>
+    val lines = StringBuilder()
+    var numberOfSpaces: Int
+    var spaces: Int
+    var count: Int
+    var spaceCounter: Int
+    var addingSpaces: Int
+    var size: Int
+    for (line in listOfLines) {
+        listOfWords = line.split(" ").toMutableList()
+        size = listOfWords.size
+        numberOfSpaces = theLargestLine - (line.length - (size - 1))
+        addingSpaces = size - 1
+        if (listOfWords.isEmpty() || size == 1) {
+            count = 0
+            spaces = 0
+        } else {
+            spaces = numberOfSpaces / (size - 1)
+            count = numberOfSpaces % (size - 1)
+        }
+        for (word in listOfWords) {
+            spaceCounter = spaces
+            lines.append(word)
+            if (addingSpaces == 0) continue
+            while (spaceCounter != 0) {
+                lines.append(" ")
+                spaceCounter--
+            }
+            if (count > 0) lines.append(" ")
+            count--
+            addingSpaces--
+        }
+        lines.append("\n")
+    }
+    writer.write(lines.toString())
+    writer.close()
 }
 
 /**
@@ -336,7 +399,24 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val intermediateResult = mutableListOf<String>()
+    val set = mutableSetOf<Char>()
+    var memory = 0
+    for (line  in File(inputName).readLines()) {
+        if (line.length > memory) memory = line.length
+    }
+    for (line in File(inputName).readLines()) {
+        for (char in line.lowercase()) {
+            set.add(char)
+        }
+        if (set.size == line.length && line.length >= memory)
+            intermediateResult.add(line)
+            memory = line.length
+        set.clear()
+    }
+    writer.write(intermediateResult.joinToString(", "))
+    writer.close()
 }
 
 /**
@@ -756,3 +836,127 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     writer.write(lines.toString())
     writer.close()
 }
+
+
+/**fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+val writer = File(outputName).bufferedWriter()
+val lines: StringBuilder = StringBuilder()
+val theFirstSubtraction = rhv * digitUnderNumber((lhv / rhv), digitNumber(lhv / rhv)) //первое число второй строчки (вычитаемое)
+val digitsOfFirstSubtraction = digitNumber(theFirstSubtraction)
+val digitsOfRemainder = digitNumber(lhv % rhv)
+val digitsOfLHV = digitNumber(lhv)
+var lastSpaces = 0
+val answer = lhv / rhv
+//пробелы, добавляемые в конце. Если lhv сразу делится на rhv, число пробелов будет равно количеству символов theFirstSubtraction
+if (digitsOfLHV != 1 && digitsOfLHV > digitNumber(answer * rhv))
+lines.append("$lhv | $rhv") else {
+lines.append(" $lhv | $rhv")
+lastSpaces = 1
+}
+lastSpaces += digitsOfLHV - digitsOfRemainder
+lines.append("\n")
+var firstSpaces = 0
+if (answer == 0) firstSpaces = digitsOfLHV - 2
+while (firstSpaces != 0) {
+lines.append(" ")
+firstSpaces--
+}
+lines.append("-${theFirstSubtraction}")
+var count =
+if (answer == 0)
+3
+else if (digitsOfLHV != 1  && digitsOfLHV > digitNumber(answer * rhv))
+digitsOfLHV - digitsOfFirstSubtraction + 2
+else
+digitsOfLHV - digitsOfFirstSubtraction + 3 //число пробелов во второй строчке
+while (count != 0) {
+lines.append(" ")
+count--
+}
+lines.append("$answer")
+lines.append("\n")
+count = digitsOfFirstSubtraction + 1
+if (digitsOfRemainder > count) count = digitsOfRemainder //число дефисов в третьей строчке, если остаток превышает предыдущее число
+while (count != 0) {
+lines.append("-")
+count--
+}
+lines.append("\n")
+var countOfSpaces: Int
+var countOfRanks = digitNumber(theFirstSubtraction) + 1 //число разрядов. Далее используется для "сноса" очередной цифры из lhv
+var nextStageNumber: Int //число будущей строки (остаток от разности)
+var countOfHyphens: Int //число дефисов
+var memory = theFirstSubtraction
+var stages = digitNumber(answer) - 1 //максимальное количество сносов цифры из lhv
+var extraSpace = 0 //дополнительный пробел, который появляется при каждом новом сносе цифры из lhv
+var memoryOfSpaces: Int //память числа пробелов в зависимости от ситуации
+var digitsOfNextStageNumber: Int
+var digitsOfCurrentRemainder: Int
+while (stages != 0) {\\h
+nextStageNumber = someFirstDigits(lhv, countOfRanks) - memory * 10
+digitsOfNextStageNumber = digitNumber(nextStageNumber)
+digitsOfCurrentRemainder = digitNumber(nextStageNumber / rhv * rhv) //количество символов в текущем остатке
+memoryOfSpaces = if (nextStageNumber < 10 || nextStageNumber % rhv == 0)
+digitsOfFirstSubtraction + 1 - digitsOfNextStageNumber
+else
+digitsOfFirstSubtraction + 2 - digitsOfNextStageNumber
+memory = memory * 10 + nextStageNumber / rhv * rhv
+countOfSpaces = memoryOfSpaces + extraSpace
+while (countOfSpaces != 0) {
+lines.append(" ")
+countOfSpaces--
+}
+if (nextStageNumber < 10) {
+extraSpace++
+lines.append("0$nextStageNumber")
+} else if (nextStageNumber % rhv == 0) {
+extraSpace++
+lines.append(" $nextStageNumber")
+} else lines.append("$nextStageNumber")
+lines.append("\n")
+memoryOfSpaces = if (nextStageNumber < 10 || nextStageNumber % rhv == 0) digitsOfFirstSubtraction - digitsOfCurrentRemainder
+else digitsOfFirstSubtraction + 1 - digitsOfCurrentRemainder
+countOfSpaces = memoryOfSpaces + extraSpace
+while (countOfSpaces != 0) {
+lines.append(" ")
+countOfSpaces--
+}
+lines.append("-${nextStageNumber / rhv * rhv}")
+lines.append("\n")
+countOfSpaces = memoryOfSpaces + extraSpace
+while (countOfSpaces != 0) {
+lines.append(" ")
+countOfSpaces--
+}
+countOfHyphens = digitsOfCurrentRemainder + 1
+while (countOfHyphens != 0) {
+lines.append("-")
+countOfHyphens--
+}
+lines.append("\n")
+countOfRanks++
+stages--
+extraSpace++
+if (nextStageNumber % rhv == 0 || nextStageNumber < 10) extraSpace--
+}
+while (lastSpaces != 0) {
+lines.append(" ")
+lastSpaces--
+}
+lines.append("${lhv % rhv}")
+writer.write(lines.toString())
+writer.close()
+}
+
+
+
+fun someFirstDigits(number: Int, n: Int): Int { //первые n цифры числа number
+val length = "$number".length
+var firstDigits = number
+var count = length - n
+while (count != 0) {
+firstDigits /= 10
+count--
+}
+return firstDigits
+}*/
