@@ -171,16 +171,19 @@ fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var theLongestLine = 0
     var lineWithSpaces: StringBuilder
+    var lastIndex: Int
     for (line in File(inputName).readLines()) {
         lineWithSpaces = StringBuilder()
         lineWithSpaces.append(line)
+        lastIndex = line.length - 1
         if (lineWithSpaces.isNotEmpty()) {
             while (lineWithSpaces[0].toString() == " ") {
                 lineWithSpaces.delete(0, 1)
+                lastIndex--
             }
-            while (lineWithSpaces.reverse()[0].toString() == " ") {
-                lineWithSpaces.delete(0, 1)
-                lineWithSpaces.reverse()
+            while (lineWithSpaces[lastIndex].toString() == " ") {
+                lineWithSpaces.delete(lastIndex, lastIndex + 1)
+                lastIndex--
             }
         }
         lineWithSpaces.reverse()
@@ -248,6 +251,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val listOfLines = mutableListOf<String>()
     val lineWithNoSpaces = StringBuilder()
     var memory: Char
+    var lastIndex: Int
     var lineLength: Int
     for (line in File(inputName).readLines()) { // после этого цикла получаем список из строк, в каждой из которых нет лишних пробелов
         lineWithNoSpaces.append(line)
@@ -257,11 +261,12 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 lineWithNoSpaces.delete(0, 1)
                 lineLength--
             }
-            while (lineWithNoSpaces.reverse()[0].toString() == " ") {
-                lineWithNoSpaces.delete(0, 1)
+            lastIndex = lineLength - 1
+            while (lineWithNoSpaces[lastIndex].toString() == " ") {
+                lineWithNoSpaces.delete(lastIndex, lastIndex + 1)
                 lineLength--
+                lastIndex--
             }
-            lineWithNoSpaces.reverse()
             memory = line[0]
             for ((index, char) in lineWithNoSpaces.withIndex()) {
                 if (char == memory && index != 0 && char == ' ') {
@@ -404,7 +409,12 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val set = mutableSetOf<Char>()
     var memory = 0
     for (line  in File(inputName).readLines()) {
-        if (line.length > memory) memory = line.length
+        for (char in line.lowercase()) {
+            set.add(char)
+        }
+        if (set.size == line.length && line.length > memory) memory = line.length
+        //находит самое длинное слово с разными символами
+        set.clear()
     }
     for (line in File(inputName).readLines()) {
         for (char in line.lowercase()) {
@@ -811,7 +821,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         memoryOfSpaces = extraSpace
         if (digitMemoryNextNumber == digitMemoryNumber) memoryOfSpaces -= 1
         countOfHyphens = digitMemoryNextNumber + 1
-        if (stages == 1 && countOfHyphens < digitsRemainder) countOfHyphens = digitsRemainder
+        if (countOfHyphens < digitsRemainder) countOfHyphens = digitsRemainder
         while (countOfHyphens != 0) {
             lines.append("-")
             countOfHyphens--
