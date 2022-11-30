@@ -274,8 +274,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val charsWithLowerCase = chars.map { it.lowercase() }.toMutableSet()
-    val wordByLettersWithLowerCase = word.map {it.lowercase()}.toMutableSet()
+    val charsWithLowerCase = chars.map { it.lowercase() }.toSet()
+    val wordByLettersWithLowerCase = word.map {it.lowercase()}.toSet()
     return (wordByLettersWithLowerCase.intersect(charsWithLowerCase) == wordByLettersWithLowerCase)
 }
 
@@ -295,10 +295,9 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
     val checkSet = mutableSetOf<String>()
     for (letter in list) {
-        if (letter in checkSet && letter in result) result[letter] = result[letter]!! + 1
+        if (letter in result) result[letter] = result[letter]!! + 1
         if (letter in checkSet && letter !in result) result += letter to 2
         checkSet += letter
-//переделал, но Set все равно оставил, в качестве проверки "попадалась ли эта буква раньше"
     }
     return result
 }
@@ -375,25 +374,40 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    var result = -1 to -1
-    val listWithNoSameElement = mutableListOf<Int>()
-    listWithNoSameElement += list
-    val mapOfIndexes = mutableMapOf<Int, Int>()
+    val error = -1 to -1
+    val listWithoutOneElement = mutableListOf<Int>()
+    listWithoutOneElement += list
     for ((index, element) in list.withIndex()) {
-        if (element in mapOfIndexes && element.toDouble() == number.toDouble() / 2)
-            return mapOfIndexes[element]!! to index
-        mapOfIndexes += element to index
+        listWithoutOneElement -= element
+        if ((number - element) in listWithoutOneElement) return index to listWithoutOneElement.indexOf(number - element) + 1
+        listWithoutOneElement.add(index, element)
     }
-    for (element in list) {
-        listWithNoSameElement -= element
-        if ((number - element) in listWithNoSameElement) {
-            result = mapOfIndexes[element]!! to mapOfIndexes[number - element]!!
-            break
-        }
-        listWithNoSameElement.add(mapOfIndexes[element]!!, element)
-    }
-    return result
+    return error
 }
+
+/**
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+var result = -1 to -1
+val listWithNoSameElement = mutableListOf<Int>()
+listWithNoSameElement += list
+val mapOfIndexes = mutableMapOf<Int, Int>()
+for ((index, element) in list.withIndex()) {
+if (element in mapOfIndexes && element.toDouble() == number.toDouble() / 2)
+return mapOfIndexes[element]!! to index
+mapOfIndexes += element to index
+}
+for (element in list) {
+listWithNoSameElement -= element
+if ((number - element) in listWithNoSameElement) {
+result = mapOfIndexes[element]!! to mapOfIndexes[number - element]!!
+break
+}
+listWithNoSameElement.add(mapOfIndexes[element]!!, element)
+}
+return result
+}
+ */
+
 
 /**
  * Очень сложная (8 баллов)
@@ -417,215 +431,3 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> =TODO()
-/**    val possibleVariants = emptyMap<String, Pair<Int, Int>>().toMutableMap()
-    var weight = 0
-    var price = 0
-    for ((name, characteristic) in treasures) {
-        if (weight + characteristic.first > capacity) continue
-        possibleVariants += (name to characteristic)
-        weight += characteristic.first
-        price += characteristic.second
-    }
-    if (possibleVariants.isEmpty()) return emptySet()
-    val difference = differenceOfMaps(treasures, possibleVariants)
-    for ((name, characteristic) in difference) {
-        for ((name1, characteristic1) in revertedMap(possibleVariants)) {
-            if ((characteristic.first <= characteristic1.first) && (characteristic.second > characteristic1.second)) {
-                possibleVariants += name to characteristic
-                possibleVariants.remove(name1)
-                weight = weight + characteristic.first - characteristic1.first
-                price = price + characteristic.second - characteristic1.second
-            }
-            if ((characteristic.first + weight <= capacity)) possibleVariants += name to characteristic
-        }
-    }
-    for ((name, characteristic) in difference) {
-        var setOfNames: Set<String>
-        for ((name1, characteristic1) in revertedMap(possibleVariants)) {
-            var someTreasuresWeight = characteristic1.first
-            var someTreasuresPrice = characteristic1.second
-            setOfNames = emptySet()
-            setOfNames + name1
-            if ((someTreasuresWeight < characteristic.first) || (someTreasuresPrice > characteristic.second)) continue
-            for ((name2, characteristic2) in revertedMap(possibleVariants)) {
-                setOfNames + name2
-                someTreasuresWeight += characteristic2.first
-                someTreasuresPrice += characteristic2.second
-                if ((someTreasuresWeight < characteristic.first)
-                    || (someTreasuresPrice > characteristic.second)
-                ) continue
-                if ((capacity >= weight - someTreasuresWeight + characteristic.first)
-                    && (price <= price - someTreasuresPrice + characteristic.second)
-                ) {
-                    for (name3 in setOfNames) {
-                        possibleVariants.remove(name3)
-                    }
-                    possibleVariants += name to characteristic
-                }
-            }
-        }
-    }
-    val result = emptyList<String>().toMutableList()
-    for ((name, _) in possibleVariants) {
-        result += name
-    }
-    return revertedSet(result)
-}
-
-
-
-
-fun revertedMap(map: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {    //создана, чтобы создать массив, обратный входному
-    val listOfNames = mutableListOf<String>()
-    val listOfWeights = mutableListOf<Int>()
-    val listOfPrices = mutableListOf<Int>()
-    for ((name, characteristic) in map) {
-        listOfNames.add(0, name)
-        listOfWeights.add(0, characteristic.first)
-        listOfPrices.add(0, characteristic.second)
-    }
-    val result = mutableMapOf<String, Pair<Int,Int>>()
-    for (name in listOfNames) {
-        result += name to (listOfWeights[listOfNames.indexOf(name)] to (listOfPrices[listOfNames.indexOf(name)]))
-    }
-    return result
-}
-
-fun revertedSet(set: List<String>): Set<String> {  //создана, чтобы создавать из списка множество с элементами расположенными в обратном порядке
-    val result = mutableSetOf<String>()
-    var count = set.size - 1
-    for (element in set) {
-        result += set[count]
-        count--
-    }
-    return result
-}
-
-fun differenceOfMaps(map1: Map<String, Pair<Int, Int>>, map2: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {
-    if (map1.size <= map2.size) return emptyMap()
-    val result = emptyMap<String, Pair<Int, Int>>().toMutableMap()
-    for ((name, characteristic) in map1) {
-        if (name !in map2) result += name to characteristic
-    }
-    return result
-}
-
-
-
-
-
-
-
- * fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-val possibleVariants = mutableMapOf<String, Pair<Int, Int>>()
-var result = mutableListOf<String>() //то же, что и result, только его элементы расположены в обратном порядке
-val preResult = mutableSetOf<String>()
-for ((name, characteristic) in treasures) {
-if (characteristic.first <= capacity) {
-preResult += name
-possibleVariants += name to characteristic  //сразу удаляет все слишкмо "тяжелые" для рюкзака сокровища
-}
-}
-if (preResult.size == 1) return preResult
-var weightOfProducts: Int
-var intermediateResult: Int
-var resultWeight = 0
-var intermediateMapOfProducts = emptyMap<String, Pair<Int, Int>>()
-for ((name1, characteristic1) in possibleVariants) {  //оставляет первый элемент массива, после чего перебирает его еще раз
-val listOfNames = emptyList<String>().toMutableList()
-val preIntermediateMapOfProducts = emptyMap<String, Pair<Int, Int>>().toMutableMap()
-preIntermediateMapOfProducts += name1 to characteristic1
-listOfNames += name1
-weightOfProducts = characteristic1.first
-intermediateResult = characteristic1.second
-for ((name2, characteristic2) in possibleVariants) {
-if ((name1 != name2)
-&& (weightOfProducts + characteristic2.first <= capacity))
-{
-preIntermediateMapOfProducts += name2 to characteristic2
-weightOfProducts += characteristic2.first
-intermediateResult += characteristic2.second
-listOfNames += name2
-}
-}
-result = listOfNames
-resultWeight = weightOfProducts
-intermediateMapOfProducts = preIntermediateMapOfProducts
-break
-}
-if (intermediateMapOfProducts.size < treasures.size) { //поиск тяжелых, но не таких ценных сокровищ, которые можно заменить
-val otherPreResult = intermediateMapOfProducts.toMutableMap()
-for ((name2, characteristic2)
-in differenceOfMaps(possibleVariants, intermediateMapOfProducts)){
-for ((name1, characteristic1) in revertedMap(intermediateMapOfProducts)) {
-if ((characteristic2.first + resultWeight - characteristic1.first <= capacity)) {
-if ((characteristic2.first + resultWeight > capacity)
-&& (characteristic2.second > characteristic1.second)) {
-resultWeight = resultWeight - characteristic1.first + characteristic2.first
-result.remove(name1)
-result.add(name2)
-break
-}
-if (characteristic2.first + resultWeight <= capacity) {
-result.add(name2)
-resultWeight += characteristic2.first
-break
-}
-}
-var changingPrice = characteristic1.second
-var changingWeight = characteristic1.first
-otherPreResult += name1 to characteristic1
-for ((name3, characteristic3) in revertedMap(intermediateMapOfProducts)) {
-if (name3 == name1) break
-changingWeight += characteristic3.first
-changingPrice += characteristic3.second
-otherPreResult += name3 to characteristic3
-if ((characteristic2.second > changingPrice) && (characteristic2.first <= changingWeight)) {
-for ((name, _) in otherPreResult) {
-result += name2
-result -= name
-}
-}
-}
-}
-}
-}
-return revertedSet(result)
-}
-
-
-fun revertedMap(map: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {    //создана, чтобы создать массив, обратный входному
-val listOfNames = mutableListOf<String>()
-val listOfWeights = mutableListOf<Int>()
-val listOfPrices = mutableListOf<Int>()
-for ((name, characteristic) in map) {
-listOfNames.add(0, name)
-listOfWeights.add(0, characteristic.first)
-listOfPrices.add(0, characteristic.second)
-}
-val result = mutableMapOf<String, Pair<Int,Int>>()
-for (name in listOfNames) {
-result += name to (listOfWeights[listOfNames.indexOf(name)] to (listOfPrices[listOfNames.indexOf(name)]))
-}
-return result
-}
-
-fun revertedSet(set: List<String>): Set<String> {  //создана, чтобы создавать из списка множество с элементами расположенными в обратном порядке
-val result = mutableSetOf<String>()
-var count = set.size - 1
-for (element in set) {
-result += set[count]
-count--
-}
-return result
-}
-
-fun differenceOfMaps(map1: Map<String, Pair<Int, Int>>, map2: Map<String, Pair<Int, Int>>): Map<String, Pair<Int, Int>> {
-if (map1.size <= map2.size) return emptyMap()
-val result = emptyMap<String, Pair<Int, Int>>().toMutableMap()
-for ((name, characteristic) in map1) {
-if (name !in map2) result += name to characteristic
-}
-return result
-}
- */

@@ -120,28 +120,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 
-val CORRECTION = mapOf(
-    "жы" to "жи", "жя" to "жа", "жю" to "жу", "чы" to "чи", "чя" to "ча", "чю" to "чу",
-    "шы" to "ши", "шя" to "ша", "шю" to "шу", "щы" to "щи", "щя" to "ща", "щю" to "щу",
-    "Жы" to "Жи", "Жя" to "Жа", "Жю" to "Жу", "Чы" to "Чи", "Чя" to "Ча", "Чю" to "Чу",
-    "Шы" to "Ши", "Шя" to "Ша", "Шю" to "Шу", "Щы" to "Щи", "Щя" to "Ща", "Щю" to "Щу",
-    "жЫ" to "жИ", "жЯ" to "жА", "жЮ" to "жУ", "чЫ" to "чИ", "чЯ" to "чА", "чЮ" to "чУ",
-    "шЫ" to "шИ", "шЯ" to "шА", "шЮ" to "шУ", "щЫ" to "щИ", "щЯ" to "щА", "щЮ" to "щУ",
-    "ЖЫ" to "ЖИ", "ЖЯ" to "ЖА", "ЖЮ" to "ЖУ", "ЧЫ" to "ЧИ", "ЧЯ" to "ЧА", "ЧЮ" to "ЧУ",
-    "ШЫ" to "ШИ", "ШЯ" to "ША", "ШЮ" to "ШУ", "ЩЫ" to "ЩИ", "ЩЯ" to "ЩА", "ЩЮ" to "ЩУ"
-)
+val CORRECTION = mapOf("ы" to "и", "я" to "а", "ю" to "у", "Ы" to "И", "Я" to "А", "Ю" to "У")
+val CHECKLIST = listOf("ж", "ч", "ш", "щ")
 fun sibilants(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    var corrector: MutableList<String>
     var correctedLine: StringBuilder
     for (line in File(inputName).readLines()) {
         correctedLine = StringBuilder()
         correctedLine.append(line)
-        for (index in 0..line.length - 2) {
-            corrector = emptyList<String>().toMutableList()
-            corrector += line[index].toString() + line[index + 1].toString()
-            if (corrector.joinToString("") in CORRECTION) {
-                correctedLine.replace(index, index + 2, CORRECTION[corrector.joinToString("")])
+        for (index in 0..correctedLine.length - 2) {
+            if (correctedLine[index].lowercase() in CHECKLIST && correctedLine[index + 1].toString() in CORRECTION) {
+                correctedLine.replace(index + 1, index + 2, CORRECTION[correctedLine[index + 1].toString()])
             }
         }
         writer.write(correctedLine.toString())
@@ -170,49 +159,26 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var theLongestLine = 0
-    var lineWithSpaces: StringBuilder
-    var lastIndex: Int
+    val linesWithoutIndent = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
-        lineWithSpaces = StringBuilder()
-        lineWithSpaces.append(line)
-        lastIndex = line.length - 1
-        if (lineWithSpaces.isNotEmpty()) {
-            while (lineWithSpaces[0].toString() == " ") {
-                lineWithSpaces.delete(0, 1)
-                lastIndex--
-            }
-            while (lineWithSpaces[lastIndex].toString() == " ") {
-                lineWithSpaces.delete(lastIndex, lastIndex + 1)
-                lastIndex--
-            }
-        }
-        lineWithSpaces.reverse()
-        if (lineWithSpaces.length > theLongestLine) theLongestLine = lineWithSpaces.length
+        val clearLine = line.trimIndent()
+        linesWithoutIndent.add(clearLine)
+        if (clearLine.length > theLongestLine) theLongestLine = clearLine.length
     }
     var count: Int
     var centeredLine: StringBuilder
     var listOfSpaces: MutableList<String>
-    for (line in File(inputName).readLines()) {
+    for (line in linesWithoutIndent) {
         centeredLine = StringBuilder()
-        centeredLine.append(line)
         listOfSpaces = emptyList<String>().toMutableList()
-        if (centeredLine.isNotEmpty()) {
-            while (centeredLine[0].toString() == " ") {
-                centeredLine.delete(0, 1)
-            }
-            while (centeredLine.reverse()[0].toString() == " ") {
-                centeredLine.delete(0, 1)
-                centeredLine.reverse()
-            }
-        }
-        count = (theLongestLine - centeredLine.length) / 2
+        count = (theLongestLine - line.length) / 2
         while (count != 0) {
             listOfSpaces.add(" ")
             count--
         }
-        centeredLine.reverse()
-        (centeredLine.reverse()).append(listOfSpaces.joinToString(""))
-        writer.write((centeredLine.reverse()).toString())
+        centeredLine.append(listOfSpaces.joinToString(""))
+        centeredLine.append(line)
+        writer.write(centeredLine.toString())
         writer.newLine()
     }
     writer.close()
@@ -248,47 +214,32 @@ fun centerFile(inputName: String, outputName: String) {
 fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var theLargestLine = 0
-    val listOfLines = mutableListOf<String>()
-    val lineWithNoSpaces = StringBuilder()
     var memory: Char
-    var lastIndex: Int
-    var lineLength: Int
-    for (line in File(inputName).readLines()) { // после этого цикла получаем список из строк, в каждой из которых нет лишних пробелов
-        lineWithNoSpaces.append(line)
-        lineLength = line.length
-        if (lineWithNoSpaces.isNotEmpty()) {
-            while (lineWithNoSpaces[0].toString() == " ") {
-                lineWithNoSpaces.delete(0, 1)
-                lineLength--
-            }
-            lastIndex = lineLength - 1
-            while (lineWithNoSpaces[lastIndex].toString() == " ") {
-                lineWithNoSpaces.delete(lastIndex, lastIndex + 1)
-                lineLength--
-                lastIndex--
-            }
-            memory = line[0]
-            for ((index, char) in lineWithNoSpaces.withIndex()) {
+    val listOfClearLines = mutableListOf<String>()
+    for (line in File(inputName).readLines()) {
+        val clearLine = StringBuilder()
+        clearLine.append(line.trimIndent())
+        var lineLength = clearLine.length
+            memory = ' ' //просто для инициализации
+            for ((index, char) in clearLine.withIndex()) { //избавляемся от лишних пробелов внутри
                 if (char == memory && index != 0 && char == ' ') {
-                    lineWithNoSpaces.delete(index, index + 1)
+                    clearLine.delete(index, index + 1)
                     lineLength--
                 }
                 memory = char
             }
-        }
         if (lineLength > theLargestLine) theLargestLine = lineLength
-        listOfLines += lineWithNoSpaces.toString()
-        lineWithNoSpaces.clear()
+        listOfClearLines.add(clearLine.toString())
     }
     var listOfWords: MutableList<String>
     val lines = StringBuilder()
     var numberOfSpaces: Int
     var spaces: Int
     var count: Int
-    var spaceCounter: Int
     var addingSpaces: Int
     var size: Int
-    for (line in listOfLines) {
+    var stringOfSpaces: StringBuilder
+    for (line in listOfClearLines) {
         listOfWords = line.split(" ").toMutableList()
         size = listOfWords.size
         numberOfSpaces = theLargestLine - (line.length - (size - 1))
@@ -300,14 +251,15 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             spaces = numberOfSpaces / (size - 1)
             count = numberOfSpaces % (size - 1)
         }
+        stringOfSpaces = StringBuilder()
+        while (spaces != 0) {
+            stringOfSpaces.append(" ")
+            spaces--
+        }
         for (word in listOfWords) {
-            spaceCounter = spaces
             lines.append(word)
             if (addingSpaces == 0) continue
-            while (spaceCounter != 0) {
-                lines.append(" ")
-                spaceCounter--
-            }
+            lines.append(stringOfSpaces)
             if (count > 0) lines.append(" ")
             count--
             addingSpaces--
@@ -412,18 +364,15 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
         for (char in line.lowercase()) {
             set.add(char)
         }
-        if (set.size == line.length && line.length > memory) memory = line.length
-        //находит самое длинное слово с разными символами
-        set.clear()
-    }
-    for (line in File(inputName).readLines()) {
-        for (char in line.lowercase()) {
-            set.add(char)
-        }
-        if (set.size == line.length && line.length >= memory)
+        if (set.size == line.length && line.length >= memory) {
             intermediateResult.add(line)
             memory = line.length
+            //находим самое длинное слово и избавляемся от слов с повторяющимися буквами
+        }
         set.clear()
+    }
+    for (line in intermediateResult) {
+        if (line.length != memory) intermediateResult.remove(line)
     }
     writer.write(intermediateResult.joinToString(", "))
     writer.close()

@@ -305,14 +305,10 @@ val ROMAN_NUMBERS = mapOf(
     "I" to 1)
 fun fromRoman(roman: String): Int {
     if (roman == "") return -1
-    val letters = mutableListOf<Char>()
-    for (char in roman) {
-        letters += char
-    }
     var memory = 0
     var result = 0
-    for (letter in letters.reversed()) {
-        val romanNumber = letter.toString()
+    for (char in roman.toList().reversed()) {
+        val romanNumber = char.toString()
         if (romanNumber !in ROMAN_NUMBERS) return -1
         if (ROMAN_NUMBERS[romanNumber]!! < memory) {
             result -= ROMAN_NUMBERS[romanNumber]!!
