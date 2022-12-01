@@ -364,9 +364,9 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
         for (char in line.lowercase()) {
             set.add(char)
         }
-        if (set.size == line.length && line.length >= memory) {
+        if (set.size == line.length) {
             intermediateResult.add(line)
-            memory = line.length
+            if (line.length > memory) memory = line.length
             //находим самое длинное слово и избавляемся от слов с повторяющимися буквами
         }
         set.clear()
