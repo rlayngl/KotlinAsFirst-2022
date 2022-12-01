@@ -161,7 +161,7 @@ fun centerFile(inputName: String, outputName: String) {
     var theLongestLine = 0
     val linesWithoutIndent = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
-        val clearLine = line.trimIndent()
+        val clearLine = line.trim()
         linesWithoutIndent.add(clearLine)
         if (clearLine.length > theLongestLine) theLongestLine = clearLine.length
     }
@@ -218,7 +218,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val listOfClearLines = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
         val clearLine = StringBuilder()
-        clearLine.append(line.trimIndent())
+        clearLine.append(line.trim())
         var lineLength = clearLine.length
             memory = ' ' //просто для инициализации
             for ((index, char) in clearLine.withIndex()) { //избавляемся от лишних пробелов внутри
